@@ -40,6 +40,7 @@ Messages.init({
   timestamp: DataTypes.DATE,
   topic: DataTypes.STRING,
   message: DataTypes.STRING,
+  type: DataTypes.STRING
 }, { sequelize: db, tableName: 'messages' })
 
 Topics.init({
