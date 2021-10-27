@@ -1,3 +1,8 @@
-import { init } from "./backend/persistence/sqlite"
+import { initDB, log } from "./backend/persistence"
 
-init()
+const test = async () => {
+    await initDB()
+    log("dfkdf", "asd")
+}
+
+test();
