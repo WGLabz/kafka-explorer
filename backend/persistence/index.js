@@ -28,14 +28,6 @@ const addTopic = (topic, type) => {
     });
 }
 
-const addMessage = (message, topic, type) => {
-    Messages.create({
-        timestamp: new Date(),
-        topic: topic,
-        message: message,
-        type: type
-    })
-}
 
 // Kafka configurations methods
 const config = {
@@ -88,5 +80,33 @@ const config = {
 
     }
 }
-export { initDB, log, config }
+
+// Kafka related methods
+const kafka = {
+    getKafkaTopicsToConsume: async () => {
+        const topicsToConsume = await Topics.findAll({
+            where: {
+                type: 'consume'
+            }
+        });
+
+        var topicsData = [];
+        topicsToConsume.map((topic) => {
+            topicsData.push(topic.dataValues);
+        });
+
+        return topicsData;
+    },
+    addMessage: async (message, topic, type, partition) => {
+        await Messages.create({
+            timestamp: new Date(),
+            topic: topic,
+            message: message,
+            type: type,
+            partition: partition
+        })
+    }
+
+};
+export { initDB, log, config, kafka }
 

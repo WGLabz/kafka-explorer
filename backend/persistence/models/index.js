@@ -52,8 +52,10 @@ Topics.init({
   created: DataTypes.DATE,
   name: DataTypes.STRING,
   type: DataTypes.STRING,
-  state: DataTypes.BOOLEAN,
-  lastedit: DataTypes.DATE
+  isactive: DataTypes.BOOLEAN,
+  lastedit: DataTypes.DATE,
+  group: DataTypes.STRING,
+  partition: DataTypes.INTEGER
 }, { sequelize: db, tableName: 'topics' })
 
 
