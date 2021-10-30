@@ -22,7 +22,8 @@
     "kafkajs": "^1.15.0",
     "sequelize": "^6.8.0",
     "sqlite3": "^5.0.2",
-    "vue": "^3.0.0"
+    "vue": "^3.0.0",
+    "vuetify": "^2.5.10"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "~4.5.0",
