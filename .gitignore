@@ -27,3 +27,4 @@ pnpm-debug.log*
 
 # Database file
 db.sqlite
+db.sqlite
