@@ -1,7 +1,9 @@
 import { createApp } from "vue";
-import { createRouter, createWebHistory } from "vue-router";
-import Container from "./views/Container";
 import App from "./App.vue";
+import vuetify from "./plugins/vuetify";
+import { loadFonts } from "./plugins/webfontloader";
+import { Container } from "@/views/Container";
+loadFonts();
 
 const routes = [
   {
@@ -18,4 +20,5 @@ const router = createRouter({
 
 createApp(App)
   .use(router)
+  .use(vuetify)
   .mount("#app");
