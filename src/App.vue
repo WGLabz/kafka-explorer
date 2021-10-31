@@ -1,5 +1,9 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png" />
+  <v-system-bar color="deep-purple darken-3"></v-system-bar>
+  <div>
+    Bikash Panda
+  </div>
+  <router-view />
 </template>
 
 <script>
