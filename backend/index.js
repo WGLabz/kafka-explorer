@@ -1,7 +1,6 @@
-import { logs, initDB } from "./persistence";
+import { logs } from "./persistence";
 const Log = {
-  get: async (query) => {
-    await initDB();
+  get: (query) => {
     return logs.getlogs(query);
   },
 };

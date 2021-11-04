@@ -1,6 +1,6 @@
 /* eslint-disable vue/no-v-model-argument */
 <template>
-  <v-continer>
+  <v-container>
     <v-row height="25vh">
       <v-col sm2>
         <v-select :items="items" label="log Level" dense outlined></v-select
@@ -69,7 +69,7 @@
         ></v-data-table>
       </v-col>
     </v-row>
-  </v-continer>
+  </v-container>
 </template>
 <script>
 import { Log } from "../../backend";
@@ -107,9 +107,9 @@ export default {
       ],
     };
   },
-  mounted(){
+  mounted() {
     console.log(Log.get())
-  }
+  },
 };
 </script>
 <style scoped>
