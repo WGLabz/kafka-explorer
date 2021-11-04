@@ -18,15 +18,7 @@ const log = (message, type) => {
   }).then(() => console.log("Log added."));
 };
 
-const addTopic = (topic, type) => {
-  Topics.create({
-    created: new Date(),
-    name: topic,
-    type: type,
-    state: true,
-    lastedit: new Date(),
-  });
-};
+
 
 // Kafka configurations methods
 const config = {
@@ -107,5 +99,22 @@ const kafka = {
       publishstatus: publishstatus,
     });
   },
+  addTopic : (topic, type) => {
+    Topics.create({
+      created: new Date(),
+      name: topic,
+      type: type,
+      state: true,
+      lastedit: new Date(),
+    })
+  }
 };
-export { initDB, log, config, kafka };
+
+// All log related Ops
+const logs = {
+  getlogs: async (query) => {
+    console.log(query)
+    return await Log.findAll({});
+  },
+};
+export { initDB, log, config, kafka, logs };
