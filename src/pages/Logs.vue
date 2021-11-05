@@ -9,7 +9,7 @@
         <v-dialog ref="dialog" v-model="modal" persistent width="290px">
           <template v-slot:activator="{ on, attrs }">
             <v-text-field
-              v-model="date"
+              v-model="startDate"
               label="From"
               dense
               outlined
@@ -17,12 +17,12 @@
               v-on="on"
             ></v-text-field>
           </template>
-          <v-date-picker v-model="date" scrollable>
+          <v-date-picker v-model="startDate" scrollable>
             <v-spacer></v-spacer>
             <v-btn text color="primary" @click="modal = false">
               Cancel
             </v-btn>
-            <v-btn text color="primary" @click="$refs.dialog.save(date)">
+            <v-btn text color="primary" @click="$refs.dialog.save(startDate)">
               OK
             </v-btn>
           </v-date-picker>
@@ -32,7 +32,7 @@
         <v-dialog ref="dialog" v-model="modal" persistent width="290px">
           <template v-slot:activator="{ on, attrs }">
             <v-text-field
-              v-model="date"
+              v-model="endDate"
               label="To"
               dense
               outlined
@@ -40,19 +40,19 @@
               v-on="on"
             ></v-text-field>
           </template>
-          <v-date-picker v-model="date" scrollable>
+          <v-date-picker v-model="endDate" scrollable>
             <v-spacer></v-spacer>
             <v-btn text color="primary" @click="modal = false">
               Cancel
             </v-btn>
-            <v-btn text color="primary" @click="$refs.dialog.save(date)">
+            <v-btn text color="primary" @click="$refs.dialog.save(endDate)">
               OK
             </v-btn>
           </v-date-picker>
         </v-dialog>
       </v-col>
       <v-col>
-        <v-btn outlined color="grey">
+        <v-btn outlined color="grey" @click="refresh">
           <v-icon>
             mdi-refresh
           </v-icon>
@@ -63,7 +63,7 @@
       <v-col>
         <v-data-table
           :headers="headers"
-          :items="desserts"
+          :items="logs"
           :items-per-page="8"
           class="elevation-1"
         ></v-data-table>
@@ -73,42 +73,51 @@
 </template>
 <script>
 import { Log } from "../../backend";
+import moment from "moment";
 export default {
   data() {
     return {
       select: "Info",
       items: ["Info", "Warn", "Error"],
-      date: new Date(Date.now() - new Date().getTimezoneOffset() * 60000)
+      startDate: new Date(Date.now() - new Date().getTimezoneOffset() * 60000)
         .toISOString()
         .substr(0, 10),
-      menu: false,
+      endDate: new Date(Date.now() - new Date().getTimezoneOffset() * 60000)
+        .toISOString()
+        .substr(0, 10),
       modal: false,
-      menu2: false,
       headers: [
         {
-          text: "Sl. No",
+          text: "ID",
           align: "start",
           sortable: false,
-          value: "id",
+          value: "_id",
         },
-        { text: "Date", value: "date" },
+        { text: "Date", value: "timestamp" },
         { text: "Type", value: "type" },
         { text: "message", value: "message" },
       ],
-      desserts: [
-        {
-          name: "Frozen Yogurt",
-          calories: 159,
-          fat: 6.0,
-          carbs: 24,
-          protein: 4.0,
-          iron: "1%",
-        },
-      ],
+      logs: [],
     };
   },
   mounted() {
-    console.log(Log.get())
+    this.loadLogs();
+  },
+  methods: {
+    refresh() {
+      this.loadLogs();
+      console.log(this.startDate);
+    },
+    loadLogs() {
+      Log.get().then((res) => {
+        let logs_ = [];
+        res.rows.map((row) => {
+          row.doc.timestamp = moment().format("HH:MM DD/mm/YYYY");
+          logs_.push(row.doc);
+        });
+        this.logs = logs_;
+      });
+    },
   },
 };
 </script>

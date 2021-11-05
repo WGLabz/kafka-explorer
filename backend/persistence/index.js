@@ -1,14 +1,17 @@
 import db from "./config/config";
-
+import { v4 as uuidv4 } from "uuid";
 const log = (message, type) => {
-  db.log.insert(
+  db.logs.put(
     {
-      timestamp: new Date(),
+      _id: uuidv4(),
       type: type,
+      timestamp: new Date(),
       message: message,
     },
-    function(err, newDoc) {
-      console.log(newDoc);
+    function callback(err) {
+      if (!err) {
+        console.log("Successfully posted a log!");
+      }
     }
   );
 };
@@ -105,12 +108,9 @@ const log = (message, type) => {
 
 // All log related Ops
 const logs = {
-  getlogs: (query) => {
+  getlogs: async (query) => {
     console.log(query);
-    db.log.find({}, (err, docs) => {
-      console.log(docs);
-      return err;
-    });
+    return await db.logs.allDocs({ include_docs: true });
   },
 };
 export { log, logs };
