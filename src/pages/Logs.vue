@@ -109,14 +109,17 @@ export default {
       console.log(this.startDate);
     },
     loadLogs() {
-      Log.get().then((res) => {
-        let logs_ = [];
-        res.rows.map((row) => {
-          row.doc.timestamp = moment().format("HH:MM DD/mm/YYYY");
-          logs_.push(row.doc);
+      Log.get({})
+        .then((res) => {
+          // let logs_ = [];
+          res.docs.map((doc) => {
+            doc.timestamp = moment(doc.timestamp).format("HH:mm DD/MM/YYYY");
+          });
+          this.logs = res.docs;
+        })
+        .catch((err) => {
+          console.log(err);
         });
-        this.logs = logs_;
-      });
     },
   },
 };

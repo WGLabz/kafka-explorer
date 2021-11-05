@@ -1,5 +1,6 @@
 // var PouchDB = require("pouchdb");
 import PouchDB from 'pouchdb-browser'
+PouchDB.plugin(require('pouchdb-find').default);
 var directory = "database";
 var db = {
   messages: new PouchDB(`${directory}/messages`),

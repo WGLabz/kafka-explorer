@@ -109,8 +109,23 @@ const log = (message, type) => {
 // All log related Ops
 const logs = {
   getlogs: async (query) => {
-    console.log(query);
-    return await db.logs.allDocs({ include_docs: true });
+    await db.logs.createIndex({
+      index: {
+        fields: ["timestamp", "type"],
+      },
+    });
+    const logs = await db.logs.find({
+      selector: {
+        $and: [
+          // { timestamp: { $lte: query.end } },
+          // { timestamp: { $gte: query.start } },
+        ],
+      },
+      sort: [{ timestamp: "desc" }],
+    });
+    console.log(query,logs);
+    return logs;
+    // return await db.logs.allDocs({ include_docs: true });
   },
 };
 export { log, logs };
