@@ -1,5 +1,6 @@
 // var PouchDB = require("pouchdb");
-import PouchDB from 'pouchdb-browser'
+// import PouchDB from 'pouchdb-browser'
+// import PouchDB from 'pouchdb-node'
 PouchDB.plugin(require('pouchdb-find').default);
 var directory = "database";
 var db = {

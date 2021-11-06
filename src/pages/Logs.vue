@@ -72,8 +72,9 @@
   </v-container>
 </template>
 <script>
-import { Log } from "../../backend";
-import moment from "moment";
+// import { Log } from "../../backend";
+// import moment from "moment";
+// const { ipcRenderer } = require('electron')
 export default {
   data() {
     return {
@@ -109,17 +110,18 @@ export default {
       console.log(this.startDate);
     },
     loadLogs() {
-      Log.get({})
-        .then((res) => {
-          // let logs_ = [];
-          res.docs.map((doc) => {
-            doc.timestamp = moment(doc.timestamp).format("HH:mm DD/MM/YYYY");
-          });
-          this.logs = res.docs;
-        })
-        .catch((err) => {
-          console.log(err);
-        });
+      window.ipcRenderer.send("logGet", {});
+      // Log.get({})
+      //   .then((res) => {
+      //     // let logs_ = [];
+      //     res.docs.map((doc) => {
+      //       doc.timestamp = moment(doc.timestamp).format("HH:mm DD/MM/YYYY");
+      //     });
+      //     this.logs = res.docs;
+      //   })
+      //   .catch((err) => {
+      //     console.log(err);
+      //   });
     },
   },
 };
