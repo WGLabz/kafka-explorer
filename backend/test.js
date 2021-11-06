@@ -1,6 +1,4 @@
 import { log,logs } from "./persistence";
 
-// log('Hellp','WARN');
-console.log(logs.getlogs(()=>{
-  console.log('Heel')
-}))
+log('Hellp','WARNd');
+console.log('Logs',logs.getlogs())

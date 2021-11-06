@@ -1,25 +1,52 @@
-var Datastore = require("nedb");
-var path = require("path");
+const loki = require("lokijs/src/lokijs.js");
+const lfsa = require("lokijs/src/loki-fs-structured-adapter.js");
 
-var db = {};
-var FOLDER_PATH = "./database";
-
-db.config = new Datastore({
-  filename: path.join(FOLDER_PATH, "config.db"),
-});
-db.messages = new Datastore({
-  filename: path.join(FOLDER_PATH, "messages.db"),
-});
-db.log = new Datastore({
-  filename: path.join(FOLDER_PATH, "log.db"),
-});
-db.topics = new Datastore({
-  filename: path.join(FOLDER_PATH, "topics.db"),
+var db_ = new loki("kafka_eplorer.db", {
+  adapter: new lfsa(),
+  autoload: true,
+  autoloadCallback: databaseInitialize,
+  autosave: true,
+  autosaveInterval: 4000,
 });
 
-db.config.loadDatabase();
-db.messages.loadDatabase();
-db.log.loadDatabase();
-db.topics.loadDatabase();
+process.on("SIGINT", function() {
+  console.log("flushing database");
+  db_.close();
+});
 
-export default db;
+function databaseInitialize() {
+  console.log("Loading Collections");
+
+  // Config Collection
+  var config = db_.getCollection("config");
+  if (config === null) {
+    config = db_.addCollection("config");
+  }
+
+  //messages collection
+  var messages = db_.getCollection("messages");
+  if (messages === null) {
+    messages = db_.addCollection("messages");
+  }
+
+  // topics collection
+  var topics = db_.getCollection("topics");
+  if (topics === null) {
+    topics = db_.addCollection("topics");
+  }
+
+  // log collection
+  var log = db_.getCollection("log");
+  if (log === null) {
+    log = db_.addCollection("log");
+  }
+  runProgramLogic();
+}
+
+function runProgramLogic() {
+  console.log(
+    "Entiries in log Collection : " + db_.getCollection("log").count()
+  );
+}
+
+export { db_, databaseInitialize };

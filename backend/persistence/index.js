@@ -1,17 +1,14 @@
-import db from "./config/config";
+import {db_, databaseInitialize} from "./config/config";
 
 const log = (message, type) => {
-  db.log.insert(
-    {
-      timestamp: new Date(),
-      type: type,
-      message: message,
-    },
-    function(err, newDoc) {
-      console.log(newDoc);
-    }
-  );
+  databaseInitialize();
+  db_.getCollection('log').insert(  {
+    timestamp: new Date(),
+    type: type,
+    message: message,
+  });
 };
+
 
 // // Kafka configurations methods
 // const config = {
@@ -105,11 +102,9 @@ const log = (message, type) => {
 
 // All log related Ops
 const logs = {
-  getlogs: async (query) => {
+  getlogs:  (query) => {
     console.log(query);
-    db.log.find({}, (docs) => {
-      return docs;
-    });
+   return db_.getCollection('log').find();
   },
 };
 export { log, logs };
