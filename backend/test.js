@@ -1,7 +1,6 @@
-import { logs } from "./persistence";
+import { log,logs } from "./persistence";
 
 // log('Hellp','WARN');
-logs.getlogs({
-  start: new Date(new Date() - 24 * 60 * 60 * 1000),
-  end: new Date(),
-});
+console.log(logs.getlogs(()=>{
+  console.log('Heel')
+}))
