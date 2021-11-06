@@ -1,11 +1,16 @@
-import { dbInit } from "./config/config";
+import { db } from "./config/config";
 
-const log = (message, type) => {
-  db_.getCollection("log").insert({
-    timestamp: new Date(),
-    type: type,
-    message: message,
-  });
+const log = async (message, type) => {
+  try {
+    const newDoc = await db.log.insert({
+      message: message,
+      timestamp: new Date(),
+      type: type,
+    });
+    console.log(newDoc);
+  } catch (err) {
+    return false;
+  }
 };
 
 // // Kafka configurations methods
@@ -100,9 +105,10 @@ const log = (message, type) => {
 
 // All log related Ops
 const logs = {
-  getlogs: (query) => {
-    console.log(query);
-    return db_.getCollection("log").find();
+  getlogs: async (query) => {
+    const docs = await db.log.find({}).sort();
+    console.log(docs)
+    return docs;
   },
 };
 export { log, logs };
