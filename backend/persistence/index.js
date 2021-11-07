@@ -1,4 +1,4 @@
-import { db } from "./config/config";
+import { db } from "./config";
 
 const log = async (message, type) => {
   try {
@@ -108,7 +108,7 @@ const kafka = {
           type: type,
           state: true,
           lastedit: new Date(),
-          isActive: true
+          isActive: true,
         });
       } else {
         console.log("Topic already exists!");
@@ -123,7 +123,53 @@ const kafka = {
 // All log related Ops
 const logs = {
   getlogs: async (query) => {
-    const docs = await db.log.find({}).sort();
+    let type = query.type;
+    let filter = {};
+    switch (type) {
+      case "WARN":
+        filter.$or = [
+          {
+            type: "WARN",
+          },
+          {
+            type: "ERROR",
+          },
+        ];
+        break;
+      case "INFO":
+        filter.$or = [
+          {
+            type: "INFO",
+          },
+          {
+            type: "WARN",
+          },
+          {
+            type: "ERROR",
+          },
+        ];
+        break;
+      case "ERROR":
+        filter.$or = [
+          {
+            type: "ERROR",
+          },
+        ];
+        break;
+    }
+    const docs = await db.log
+      .find({
+        $and: [
+          filter,
+          {
+            $and: [
+              { timestamp: { $gt: query.start } },
+              { timestamp: { $lt: query.end } },
+            ],
+          },
+        ],
+      })
+      .sort({ timestamp: -1 });
     return docs;
   },
 };

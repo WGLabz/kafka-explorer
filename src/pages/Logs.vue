@@ -80,7 +80,7 @@ export default {
   data() {
     return {
       select: "Info",
-      items: ["Info", "Warn", "Error"],
+      items: ["INFO", "WARN", "ERROR"],
       startDate: new Date(Date.now() - new Date().getTimezoneOffset() * 60000)
         .toISOString()
         .substr(0, 10),
@@ -119,7 +119,11 @@ export default {
       console.log(this.startDate);
     },
     loadLogs() {
-      window.ipcRenderer.send("logGet", {});
+      window.ipcRenderer.send("logGet", {
+        type: this.select,
+        start: new Date(new Date() - 24 * 60 * 60 * 1000),
+        end: new Date(),
+      });
     },
   },
 };
