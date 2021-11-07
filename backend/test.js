@@ -1,4 +1,30 @@
-import { log,logs } from "./persistence";
+import { log, kafka,config } from "./persistence";
 
-log('Hellp','WARN');
-console.log(logs.getlogs())
+// log('Hellp','WARN');
+// console.log(kafka.addTopic("test", "consume"));
+// kafka.addTopic("test3", "consume");
+// // // kafka.
+// kafka.getKafkaTopicsToConsume().then((data) => {
+//   console.log(data);
+// });
+// config.updateConfig('KAFKA_USERNAME','')
+// config.updateConfig('KAFKA_PASSWORD','')
+// config.updateConfig('KAFKA_BOOTSTRAP_SERVER','localhost:9092')
+// config.updateConfig('KAFKA_USERNAME','')
+// config.readConfig('KAFKA_BOOTSTRAP_SERVER').then((val) =>{
+//     console.log(val);
+// })
+import {
+  ConsumerInit,
+  ConsumerClose,
+  ProducerInit,
+  ProducerClose,
+  SendMessage,
+  createTopic,
+} from "./kafka";
+
+// ConsumerInit();
+ProducerInit().then(() =>{
+
+  SendMessage('test3','Helloworld','HeloWorld',0)
+});

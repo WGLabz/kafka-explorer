@@ -14,7 +14,8 @@ const init = async () => {
 
   // Subscribe to Kafka topic
   topics.map(async (topic) => {
-    if (topic.isactive) {
+    if (topic.isActive) {
+      console.log(`Subscribing to topic ${topic.name}`, "INFO");
       log(`Subscribing to topic ${topic.name}`, "INFO");
       await consumer.subscribe({
         topic: topic.name,
@@ -31,6 +32,7 @@ const init = async () => {
         value: message.value ? message.value.toString() : "",
         headers: message.headers ? message.headers : "",
       };
+      console.log(JSON.stringify(msg));
       kakfkadetails
         .addMessage(JSON.stringify(msg), topic, "consume", partition, true)
         .catch(async (error) => {

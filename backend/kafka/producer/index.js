@@ -5,7 +5,7 @@ import { log, kafka as kakfkadetails } from "../../persistence";
 const producer = kafka.producer();
 
 const init = async () => {
-  await producer.connect();
+  return await producer.connect();
 };
 
 const send = async (topic, messagekey, messagevalue, partition) => {

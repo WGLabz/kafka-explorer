@@ -12,95 +12,113 @@ const log = async (message, type) => {
   }
 };
 
-// // Kafka configurations methods
-// const config = {
-//   readConfig: async (name) => {
-//     const config = await Config.findAll({
-//       where: {
-//         name: name,
-//       },
-//     });
-//     return config.length > 0 ? config[0].dataValues.value : false;
-//   },
-//   updateConfig: async (name, value) => {
-//     // Check if config already exists
-//     const config = await Config.findAll({
-//       where: {
-//         name: name,
-//       },
-//     });
-//     // Update
-//     if (config.length !== 0) {
-//       try {
-//         await Config.update(
-//           {
-//             value: value,
-//             lastchange: new Date(),
-//           },
-//           {
-//             where: {
-//               name: name,
-//             },
-//           }
-//         );
-//         return true;
-//       } catch (e) {
-//         return false;
-//       }
-//     } else {
-//       // Create
-//       try {
-//         await Config.create({
-//           created: new Date(),
-//           lastchange: new Date(),
-//           name: name,
-//           value: value,
-//         });
-//         return true;
-//       } catch (e) {
-//         return false;
-//       }
-//     }
-//   },
-//   reset: () => {},
-// };
+// Kafka configurations methods
+const config = {
+  readConfig: async (name) => {
+    const config = await db.config
+      .find({
+        name: name,
+      })
+      .sort();
+    return config.length > 0 ? config[0].value : false;
+  },
+  updateConfig: async (name, value) => {
+    // Check if config already exists
+    const config = await db.config
+      .find({
+        name: name,
+      })
+      .sort();
 
-// // Kafka related methods
-// const kafka = {
-//   getKafkaTopicsToConsume: async () => {
-//     const topicsToConsume = await Topics.findAll({
-//       where: {
-//         type: "consume",
-//       },
-//     });
+    // Update
+    if (config.length !== 0) {
+      try {
+        await db.config.update(
+          {
+            name: name,
+          },
+          { $set: { value: value, lastchange: new Date() } }
+        );
+        return true;
+      } catch (e) {
+        return false;
+      }
+    } else {
+      // Create
+      try {
+        await db.config.insert({
+          created: new Date(),
+          lastchange: new Date(),
+          name: name,
+          value: value,
+        });
+        return true;
+      } catch (e) {
+        return false;
+      }
+    }
+  },
+  reset: () => {},
+};
 
-//     var topicsData = [];
-//     topicsToConsume.map((topic) => {
-//       topicsData.push(topic.dataValues);
-//     });
+// Kafka related methods
+const kafka = {
+  getKafkaTopicsToConsume: async () => {
+    const topicsData = await db.topics
+      .find({
+        type: "consume",
+      })
+      .sort();
 
-//     return topicsData;
-//   },
-//   addMessage: async (message, topic, type, partition, publishstatus) => {
-//     await Messages.create({
-//       timestamp: new Date(),
-//       topic: topic,
-//       message: message,
-//       type: type,
-//       partition: partition,
-//       publishstatus: publishstatus,
-//     });
-//   },
-//   addTopic: (topic, type) => {
-//     Topics.create({
-//       created: new Date(),
-//       name: topic,
-//       type: type,
-//       state: true,
-//       lastedit: new Date(),
-//     });
-//   },
-// };
+    return topicsData;
+  },
+  addMessage: async (message, topic, type, partition, publishstatus) => {
+    try {
+      await db.messages.insert({
+        timestamp: new Date(),
+        topic: topic,
+        message: message,
+        type: type,
+        partition: partition,
+        publishstatus: publishstatus,
+      });
+    } catch (err) {
+      return false;
+    }
+  },
+  addTopic: async (topic, type) => {
+    try {
+      const topic_ = await db.topics
+        .find({
+          $and: [
+            {
+              type: type,
+            },
+            {
+              name: topic,
+            },
+          ],
+        })
+        .sort();
+      if (topic_.length === 0) {
+        // Check if the topic already exists with same type
+        await db.topics.insert({
+          created: new Date(),
+          name: topic,
+          type: type,
+          state: true,
+          lastedit: new Date(),
+          isActive: true
+        });
+      } else {
+        console.log("Topic already exists!");
+        return false;
+      }
+    } catch (err) {
+      return false;
+    }
+  },
+};
 
 // All log related Ops
 const logs = {
@@ -109,6 +127,6 @@ const logs = {
     return docs;
   },
 };
-export { log, logs };
+export { log, logs, kafka, config };
 
 //9668863074
