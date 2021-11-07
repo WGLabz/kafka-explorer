@@ -73,8 +73,9 @@
 </template>
 <script>
 // import { Log } from "../../backend";
-// import moment from "moment";
+import moment from "moment";
 // const { ipcRenderer } = require('electron')
+// import { ipcRenderer } from 'electron';
 export default {
   data() {
     return {
@@ -103,6 +104,14 @@ export default {
   },
   mounted() {
     this.loadLogs();
+    this.$nextTick(function() {
+      window.ipcRenderer.receive("logGetResponse", (args) => {
+        args.map((doc) => {
+          doc.timestamp = moment(doc.timestamp).format("HH:mm DD/MM/YYYY");
+        });
+        this.logs = args;
+      });
+    });
   },
   methods: {
     refresh() {
@@ -111,17 +120,6 @@ export default {
     },
     loadLogs() {
       window.ipcRenderer.send("logGet", {});
-      // Log.get({})
-      //   .then((res) => {
-      //     // let logs_ = [];
-      //     res.docs.map((doc) => {
-      //       doc.timestamp = moment(doc.timestamp).format("HH:mm DD/MM/YYYY");
-      //     });
-      //     this.logs = res.docs;
-      //   })
-      //   .catch((err) => {
-      //     console.log(err);
-      //   });
     },
   },
 };

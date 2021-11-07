@@ -82,17 +82,5 @@ if (isDevelopment) {
 }
 
 // Initliaze DB
-// require("../backend/backend.js");
-import { logs } from "../backend/persistence";
-
-console.log("Backend Triggered!");
-
-const { ipcMain } = require("electron");
-
-ipcMain.on("logGet", (event, arg) => {
-  console.log(arg);
-  let logs_ = logs.getlogs();
-  console.log(logs_);
-  //   event.reply("logGetResponse", logs_);
-});
+require("../backend/backend.js");
 

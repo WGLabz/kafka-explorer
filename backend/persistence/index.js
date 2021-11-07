@@ -2,12 +2,11 @@ import { db } from "./config/config";
 
 const log = async (message, type) => {
   try {
-    const newDoc = await db.log.insert({
+    await db.log.insert({
       message: message,
       timestamp: new Date(),
       type: type,
     });
-    console.log(newDoc);
   } catch (err) {
     return false;
   }
@@ -107,7 +106,6 @@ const log = async (message, type) => {
 const logs = {
   getlogs: async (query) => {
     const docs = await db.log.find({}).sort();
-    console.log(docs)
     return docs;
   },
 };

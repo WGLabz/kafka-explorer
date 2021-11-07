@@ -1,6 +1,7 @@
 import { contextBridge, ipcRenderer } from "electron";
 
 // Expose ipcRenderer to the client
+// window.ipcRenderer = require('electron').ipcRenderer;
 contextBridge.exposeInMainWorld("ipcRenderer", {
   send: (channel, data) => {
     let validChannels = ["logGet", "logGetResponse"]; // <-- Array of all ipcRenderer Channels used in the client
@@ -17,4 +18,4 @@ contextBridge.exposeInMainWorld("ipcRenderer", {
   },
 });
 // require("../backend/backend.js");
-alert("It Worked!"); // Remove this line once you confirm it worked
+// alert("It Worked!"); // Remove this line once you confirm it worked

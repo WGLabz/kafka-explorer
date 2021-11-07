@@ -1,12 +1,15 @@
-import { logs } from "./persistence";
-
-console.log("Backend Triggered!");
+import { logs } from "../backend/persistence";
 
 const { ipcMain } = require("electron");
 
 ipcMain.on("logGet", (event, arg) => {
   console.log(arg);
-  let logs_ = logs.getlogs();
-  console.log(logs_);
-  //   event.reply("logGetResponse", logs_);
+  logs
+    .getlogs()
+    .then((logs_) => {
+      event.reply("logGetResponse", logs_);
+    })
+    .catch((err) => {
+      console.log(err);
+    });
 });
