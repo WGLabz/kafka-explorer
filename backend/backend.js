@@ -10,9 +10,8 @@ import {
 const { ipcMain } = require("electron");
 
 ipcMain.on("logGet", (event, arg) => {
-  console.log(arg);
   logs
-    .getlogs()
+    .getlogs(arg)
     .then((logs_) => {
       event.reply("logGetResponse", logs_);
     })
