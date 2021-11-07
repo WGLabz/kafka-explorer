@@ -51,6 +51,9 @@ export default {
   data: () => ({
     routes,
   }),
+  mounted() {
+    window.ipcRenderer.send("kafka", { command: "init" });
+  },
 };
 </script>
 
