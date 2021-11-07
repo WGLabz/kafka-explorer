@@ -1,16 +1,24 @@
 const { Kafka } = require('kafkajs')
+import { config } from "../persistence"
+let username, password, brokers, sasl, ssl
 
-const { KAFKA_USERNAME: username, KAFKA_PASSWORD: password } = process.env
-const sasl = username && password ? { username, password, mechanism: 'plain' } : null
-const ssl = !!sasl
+async function init() {
+  username = await config.readConfig('KAFKA_USERNAME');
+  password = await config.readConfig('KAFKA_PASSWORD');
+  brokers = await config.readConfig('KAFKA_BOOTSTRAP_SERVER');
+  sasl = username && password ? { username, password, mechanism: 'plain' } : null
+  ssl = !!sasl
+  brokers = brokers.split(',');
+}
 
-// This creates a client instance that is configured to connect to the Kafka broker provided by
-// the environment variable KAFKA_BOOTSTRAP_SERVER
 const kafka = new Kafka({
   clientId: 'a-random-client-id',
-  brokers: [process.env.KAFKA_BOOTSTRAP_SERVER],
+  brokers: async () => {
+    await init();
+    return brokers;
+  },
   ssl,
   sasl
 })
 
-module.exports = kafka
+export { kafka }

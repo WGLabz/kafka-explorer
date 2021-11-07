@@ -1,31 +1,17 @@
 # kafka-explorer
 
-## Project setup
-```
-npm install
+
+## Build `Sqlite`
+
+```sh
+    ./node_modules/.bin/electron-rebuild  -f -w sqlite3
 ```
 
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
+## Kafka Commands
 
-### Compiles and minifies for production
-```
-npm run build
-```
+```sh
+$ .\apache-zookeeper-3.7.0-bin\bin\zkServer.cmd .\bin\windows\kafka-server-start.bat .\config\server.properties 
+$ .\kafka-console-producer.bat --broker-list localhost:9092 --topic test 
+$ cd C:\kafka\kafka\bin\windows && .\kafka-console-consumer.bat --bootstrap-server localhost:9092 --topic test
 
-### Lints and fixes files
 ```
-npm run lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
-
-
-<!--  -->
-.\apache-zookeeper-3.7.0-bin\bin\zkServer.cmd
-.\bin\windows\kafka-server-start.bat .\config\server.properties
- .\kafka-console-producer.bat --broker-list localhost:9092 --topic test
-cd C:\kafka\kafka\bin\windows && .\kafka-console-consumer.bat --bootstrap-server localhost:9092 --topic test

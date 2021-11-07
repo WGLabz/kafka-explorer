@@ -21,9 +21,6 @@ pnpm-debug.log*
 *.njsproj
 *.sln
 *.sw?
-
-#Electron-builder output
-/dist_electron
-
-# Database file
-db.sqlite
+database/*
+package-lock.json
+*.db
