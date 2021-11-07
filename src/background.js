@@ -22,9 +22,10 @@ async function createWindow() {
       nodeIntegration: process.env.ELECTRON_NODE_INTEGRATION,
       contextIsolation: !process.env.ELECTRON_NODE_INTEGRATION,
       preload: path.join(__dirname, "preload.js"),
+      enableRemoteModule: true,
     },
   });
-
+  global.mainWindow = win;
   if (process.env.WEBPACK_DEV_SERVER_URL) {
     // Load the url of the dev server if in development mode
     await win.loadURL(process.env.WEBPACK_DEV_SERVER_URL);
@@ -83,4 +84,3 @@ if (isDevelopment) {
 
 // Initliaze DB
 require("../backend/backend.js");
-

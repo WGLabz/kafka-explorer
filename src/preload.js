@@ -4,13 +4,13 @@ import { contextBridge, ipcRenderer } from "electron";
 // window.ipcRenderer = require('electron').ipcRenderer;
 contextBridge.exposeInMainWorld("ipcRenderer", {
   send: (channel, data) => {
-    let validChannels = ["logGet", "logGetResponse","kafka"]; // <-- Array of all ipcRenderer Channels used in the client
+    let validChannels = ["logGet", "logGetResponse","kafka","conf"]; // <-- Array of all ipcRenderer Channels used in the client
     if (validChannels.includes(channel)) {
       ipcRenderer.send(channel, data);
     }
   },
   receive: (channel, func) => {
-    let validChannels = ["logGet", "logGetResponse","kafkaResponse"]; // <-- Array of all ipcMain Channels used in the electron
+    let validChannels = ["logGet", "logGetResponse","kafkaResponse","userMessage","confres"]; // <-- Array of all ipcMain Channels used in the electron
     if (validChannels.includes(channel)) {
       // Deliberately strip event as it includes `sender`
       ipcRenderer.on(channel, (event, ...args) => func(...args));

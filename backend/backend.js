@@ -1,4 +1,4 @@
-import { logs } from "../backend/persistence";
+import { logs } from "./persistence";
 import {
   ConsumerInit,
   ConsumerClose,
@@ -7,7 +7,8 @@ import {
   SendMessage,
   createTopic,
 } from "./kafka";
-const { ipcMain } = require("electron");
+import { config } from "./persistence";
+import { ipcMain, webContents } from "electron";
 
 ipcMain.on("logGet", (event, arg) => {
   logs
@@ -20,8 +21,8 @@ ipcMain.on("logGet", (event, arg) => {
     });
 });
 
-ipcMain.on("kafka", (event,arg) => {
-  console.log('Kafka',arg);
+ipcMain.on("kafka", (event, arg) => {
+  console.log("Kafka", arg);
   var command = arg.command;
   switch (command) {
     case "init":
@@ -41,5 +42,36 @@ ipcMain.on("kafka", (event,arg) => {
       var payload_ = arg.payload;
       createTopic(payload_.topic);
       break;
+  }
+});
+ipcMain.on("conf", async (event, arg) => {
+  var command = arg.command;
+  if (command === "GET") {
+    event.reply("confres", {
+      type: "GET",
+      server: await config.readConfig("KAFKA_BOOTSTRAP_SERVER"),
+      username: await config.readConfig("KAFKA_USERNAME"),
+      password: await config.readConfig("KAFKA_PASSWORD"),
+    });
+  }
+  if (command === "SET") {
+    try {
+      await config.updateConfig("KAFKA_USERNAME", arg.username);
+      await config.updateConfig("KAFKA_PASSWORD", arg.password);
+      await config.updateConfig("KAFKA_BOOTSTRAP_SERVER", arg.server);
+      webContents.getAllWebContents().map((content) => {
+        content.send("userMessage", {
+          type: "INFO",
+          message: `Server config updated sucessfully!`,
+        });
+      });
+    } catch (e) {
+      webContents.getAllWebContents().map((content) => {
+        content.send("userMessage", {
+          type: "ERROR",
+          message: `Server config update failed!`,
+        });
+      });
+    }
   }
 });

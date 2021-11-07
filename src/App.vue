@@ -53,6 +53,22 @@ export default {
   }),
   mounted() {
     window.ipcRenderer.send("kafka", { command: "init" });
+
+    this.$nextTick(function () {
+      window.ipcRenderer.receive("userMessage", (args) => {
+        switch (args.type) {
+          case "ERROR":
+            this.$message.error(args.message, 10);
+            break;
+          case "WARN":
+            this.$message.warning(args.message, 10);
+            break;
+          case "INFO":
+            this.$message.success(args.message, 10);
+            break;
+        }
+      });
+    });
   },
 };
 </script>

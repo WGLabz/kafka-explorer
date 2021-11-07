@@ -2,7 +2,7 @@
 <template>
   <v-container>
     <a-row type="flex" justify="start" class="pb-8">
-      <a-col :span="3">
+      <a-col :span="4">
         <a-select
           label-in-value
           :default-value="{ key: logTypeDfaultSelection }"
@@ -18,7 +18,7 @@
           </a-select-option>
         </a-select>
       </a-col>
-      <a-col :span="8">
+      <a-col :span="11">
         <a-range-picker
           :show-time="{ format: 'HH:mm' }"
           format="YYYY-MM-DD HH:mm"
