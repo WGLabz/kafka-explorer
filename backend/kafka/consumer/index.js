@@ -1,6 +1,6 @@
 import { kafka } from "../kafka";
 import { log, kafka as kakfkadetails } from "../../persistence";
-const { webContents } = require("electron");
+import { sendUserMessage } from "../../messaging";
 
 // Create a Kafka consumer.
 const consumer = kafka.consumer({
@@ -24,10 +24,7 @@ const init = async () => {
           fromBeginning: false,
         });
       } catch (e) {
-        webContents.send("userMessage", {
-          type: "ERROR",
-          message: `Failed to subscribe to topic : ${topic}`,
-        });
+        sendUserMessage("ERROR", `Failed to subscribe to topic : ${topic.name}`);
       }
     }
   });

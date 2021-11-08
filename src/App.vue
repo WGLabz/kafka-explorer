@@ -58,13 +58,13 @@ export default {
       window.ipcRenderer.receive("userMessage", (args) => {
         switch (args.type) {
           case "ERROR":
-            this.$message.error(args.message, 10);
+            this.$message.error(args.message, 4);
             break;
           case "WARN":
-            this.$message.warning(args.message, 10);
+            this.$message.warning(args.message, 4);
             break;
           case "INFO":
-            this.$message.success(args.message, 10);
+            this.$message.success(args.message, 4);
             break;
         }
       });

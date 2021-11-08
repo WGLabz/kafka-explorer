@@ -8,7 +8,8 @@ import {
   createTopic,
 } from "./kafka";
 import { config } from "./persistence";
-import { ipcMain, webContents } from "electron";
+import { ipcMain } from "electron";
+import { sendUserMessage } from "./messaging";
 
 ipcMain.on("logGet", (event, arg) => {
   logs
@@ -56,22 +57,14 @@ ipcMain.on("conf", async (event, arg) => {
   }
   if (command === "SET") {
     try {
+      console.log(arg);
       await config.updateConfig("KAFKA_USERNAME", arg.username);
       await config.updateConfig("KAFKA_PASSWORD", arg.password);
       await config.updateConfig("KAFKA_BOOTSTRAP_SERVER", arg.server);
-      webContents.getAllWebContents().map((content) => {
-        content.send("userMessage", {
-          type: "INFO",
-          message: `Server config updated sucessfully!`,
-        });
-      });
+
+      sendUserMessage("INFO", `Server config updated sucessfully!`);
     } catch (e) {
-      webContents.getAllWebContents().map((content) => {
-        content.send("userMessage", {
-          type: "ERROR",
-          message: `Server config update failed!`,
-        });
-      });
+      sendUserMessage("ERROR", `Server config update failed!`);
     }
   }
 });

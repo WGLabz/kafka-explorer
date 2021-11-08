@@ -35,17 +35,15 @@ export default {
     this.getConfigs();
     this.$nextTick(function () {
       window.ipcRenderer.receive("confres", (args) => {
-        // if (args.type === "GET") {
-        this.server = args.server;
-        this.username = args.username;
-        this.password = args.password;
-        // }
-        console.log(args);
+        if (args.type === "GET") {
+          this.server = args.server;
+          this.username = args.username;
+          this.password = args.password;
+        }
       });
     });
   },
   methods: {
-    success() {},
     getConfigs() {
       window.ipcRenderer.send("conf", {
         command: "GET",
@@ -55,8 +53,10 @@ export default {
       console.log("Saving!!");
       window.ipcRenderer.send("conf", {
         command: "SET",
+        server: this.server,
+        usernme: this.username || "",
+        password: this.password || "",
       });
-      this.getConfigs();
     },
   },
 };
