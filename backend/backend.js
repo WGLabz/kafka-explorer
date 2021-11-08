@@ -7,7 +7,7 @@ import {
   SendMessage,
   createTopic,
 } from "./kafka";
-import { config } from "./persistence";
+import { config, kafka } from "./persistence";
 import { ipcMain } from "electron";
 import { sendUserMessage } from "./messaging";
 
@@ -43,8 +43,15 @@ ipcMain.on("kafka", (event, arg) => {
       var payload_ = arg.payload;
       createTopic(payload_.topic);
       break;
+    case "gettopics":
+      kafka.getTopics().then((topics) => {
+        event.reply("kafkaResponse", { topics: topics, type: "topics" });
+      });
+      break;
   }
 });
+
+// Configuration Related.
 ipcMain.on("conf", async (event, arg) => {
   var command = arg.command;
   if (command === "GET") {

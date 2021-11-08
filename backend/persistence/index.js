@@ -118,6 +118,9 @@ const kafka = {
       return false;
     }
   },
+  getTopics: async () => {
+    return await db.topics.find({}).sort();
+  },
 };
 
 // All log related Ops
