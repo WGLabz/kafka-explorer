@@ -41,12 +41,55 @@ ipcMain.on("kafka", (event, arg) => {
 
     case "createtopic":
       var payload_ = arg.payload;
-      createTopic(payload_.topic);
+      kafka
+        .addTopic(payload_.name, payload_.type)
+        .then(async () => {
+          await createTopic(payload_.topic);
+        })
+        .then(() => {
+          sendUserMessage("INFO", "Topic added sucessfully");
+        })
+        .catch(() => {
+          sendUserMessage("ERROR", "Error adding topic.");
+        });
       break;
     case "gettopics":
       kafka.getTopics().then((topics) => {
         event.reply("kafkaResponse", { topics: topics, type: "topics" });
       });
+      break;
+
+    case "disabletopic":
+      kafka
+        .disableTopic(arg.id)
+        .then(() => {
+          sendUserMessage("INFO", "Topic disabled sucessfully");
+        })
+        .catch(() => {
+          sendUserMessage("ERROR", "Error disbaling topic.");
+        });
+      break;
+
+    case "enabletopic":
+      kafka
+        .enableTopic(arg.id)
+        .then(() => {
+          sendUserMessage("INFO", "Topic enabled sucessfully");
+        })
+        .catch(() => {
+          sendUserMessage("ERROR", "Error enabling topic.");
+        });
+      break;
+
+    case "removetopic":
+      kafka
+        .removeTopic(arg.id)
+        .then(() => {
+          sendUserMessage("INFO", "Topic removed from DB");
+        })
+        .catch(() => {
+          sendUserMessage("ERROR", "Error while removing topic from the DB.");
+        });
       break;
   }
 });

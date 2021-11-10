@@ -63,6 +63,21 @@ const config = {
 
 // Kafka related methods
 const kafka = {
+  removeTopic: async (id) => {
+    return await db.topics.remove({ _id: id });
+  },
+  disableTopic: async (id) => {
+    return await db.topics.update(
+      { _id: id },
+      { $set: { isActive: false, lastedit: new Date() } }
+    );
+  },
+  enableTopic: async (id) => {
+    return await db.topics.update(
+      { _id: id },
+      { $set: { isActive: true, lastedit: new Date() } }
+    );
+  },
   getKafkaTopicsToConsume: async () => {
     const topicsData = await db.topics
       .find({
@@ -119,7 +134,7 @@ const kafka = {
     }
   },
   getTopics: async () => {
-    return await db.topics.find({}).sort();
+    return await db.topics.find({}).sort({ lastedit: -1 });
   },
 };
 

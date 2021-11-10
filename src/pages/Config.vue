@@ -5,29 +5,54 @@
         <a-input
           placeholder="Bootstrap Server(s)"
           allow-clear
+          size="small"
           v-model="server"
         />
       </a-col>
       <a-col :span="5">
-        <a-input placeholder="Username" allow-clear v-model="username" />
+        <a-input
+          placeholder="Username"
+          allow-clear
+          v-model="username"
+          size="small"
+        />
       </a-col>
       <a-col :span="5">
-        <a-input placeholder="Password" allow-clear v-model="password" />
+        <a-input
+          placeholder="Password"
+          allow-clear
+          v-model="password"
+          size="small"
+        />
       </a-col>
       <a-col :span="5">
-        <a-button type="primary" @click="saveServerInfo">
-          <v-icon dark> mdi-save </v-icon>
+        <a-button type="primary" @click="saveServerInfo" size="small">
+          <a-icon type="check" style="color: white" />
         </a-button>
       </a-col>
     </a-row>
     <a-row :gutter="16">
       <a-col>
-        <a-button class="editable-add-btn mt-5 mb-5"> Add </a-button>
+        <a-button
+          class="editable-add-btn mt-5 mb-5"
+          @click="handleAdd"
+          icon="plus"
+          size="small"
+        >
+        </a-button>
+        <a-button
+          class="editable-add-btn mt-5 mb-5 ml-2"
+          icon="reload"
+          @click="getTopics"
+          size="small"
+        >
+        </a-button>
         <a-table
           bordered
           :data-source="kafkatopics"
           :columns="columns"
           height="600px"
+          size="small"
           :rowKey="(record) => record._id"
         >
           <!-- <template v-slot:name="text, record">
@@ -38,30 +63,50 @@
           </template> -->
           <template v-slot:operation="text, record">
             <a-popconfirm
-              v-if="kafkatopics.length"
-              title="Sure to delete?"
-              @confirm="() => onDelete(record._id)"
+              v-if="record.isActive"
+              title="Sure to disable?"
+              @confirm="() => onDisable(record._id)"
+              style="margin: 5px"
             >
-              <a-button><a-icon type="stop" /></a-button>
+              <a-button style="color: yellow" icon="stop" size="small" />
+            </a-popconfirm>
+            <a-popconfirm
+              v-else
+              title="Sure to enable?"
+              @confirm="() => onEnable(record._id)"
+              style="margin: 5px"
+            >
+              <a-button style="color: green" size="small" icon="caret-right" />
             </a-popconfirm>
             <a-popconfirm
               v-if="kafkatopics.length"
               title="Sure to delete?"
               @confirm="() => onDelete(record._id)"
             >
-              <a-button><a-icon type="delete" /></a-button>
+              <a-button style="color: red" size="small" icon="delete" />
             </a-popconfirm>
           </template>
         </a-table>
       </a-col>
     </a-row>
+    <a-modal
+      v-model="addnewtopicmodalvisibility"
+      title="Add new topic"
+      @ok="getTopics"
+      @cancel="getTopics"
+    >
+      <add-new-kafka-topic />
+    </a-modal>
   </div>
 </template>
 <script>
 import moment from "moment";
+import AddNewKafkaTopic from "../components/AddNewKafkaTopic";
 export default {
+  components: { AddNewKafkaTopic },
   data() {
     return {
+      addnewtopicmodalvisibility: false,
       server: "",
       username: "",
       password: "",
@@ -75,7 +120,7 @@ export default {
         },
         {
           title: "State",
-          dataIndex: "state",
+          dataIndex: "isActive",
           customRender: (text) => {
             return text ? (
               <a-icon type="check-circle" style="color:green" />
@@ -90,12 +135,11 @@ export default {
           customRender: (text) => {
             return text === "consume" ? (
               <div>
-                <a-icon type="arrow-down" /> Consume
+                <a-icon type="arrow-down" />
               </div>
             ) : (
               <div>
                 <a-icon type="arrow-up" />
-                Produce
               </div>
             );
           },
@@ -136,12 +180,14 @@ export default {
       });
 
       window.ipcRenderer.receive("kafkaResponse", (args) => {
-        console.log(args);
         if (args.type === "topics") this.kafkatopics = args.topics;
       });
     });
   },
   methods: {
+    handleAdd() {
+      this.addnewtopicmodalvisibility = true;
+    },
     onCellChange(key, dataIndex, value) {
       const dataSource = [...this.dataSource];
       const target = dataSource.find((item) => item.key === key);
@@ -151,13 +197,32 @@ export default {
       }
     },
     onDelete(key) {
-      const dataSource = [...this.dataSource];
-      this.dataSource = dataSource.filter((item) => item.key !== key);
+      window.ipcRenderer.send("kafka", {
+        command: "removetopic",
+        id: key,
+      });
+      this.getTopics();
+    },
+
+    onDisable(key) {
+      window.ipcRenderer.send("kafka", {
+        command: "disabletopic",
+        id: key,
+      });
+      this.getTopics();
+    },
+    onEnable(key) {
+      window.ipcRenderer.send("kafka", {
+        command: "enabletopic",
+        id: key,
+      });
+      this.getTopics();
     },
     getTopics() {
       window.ipcRenderer.send("kafka", {
         command: "gettopics",
       });
+      this.addnewtopicmodalvisibility = false;
     },
     getConfigs() {
       window.ipcRenderer.send("conf", {
@@ -166,7 +231,6 @@ export default {
     },
     moment,
     saveServerInfo() {
-      console.log("Saving!!");
       window.ipcRenderer.send("conf", {
         command: "SET",
         server: this.server,
