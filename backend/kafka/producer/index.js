@@ -1,15 +1,14 @@
-import { kafka } from "../kafka";
 import { log, kafka as kakfkadetails } from "../../persistence";
 
-// Create a Kafka producer instance
-const producer = kafka.producer();
-
 const init = async () => {
-  return await producer.connect();
+  // Create a Kafka producer instance
+  global.producer = global.kafka.producer();
+
+  return await global.producer.connect();
 };
 
 const send = async (topic, messagekey, messagevalue, partition) => {
-  const sender = await producer.send({
+  const sender = await global.producer.send({
     topic: topic,
     messages: [{ key: messagekey, value: messagevalue, partition: partition }],
   });
@@ -34,7 +33,7 @@ const send = async (topic, messagekey, messagevalue, partition) => {
 };
 
 const close = async () => {
-  producer.close();
+  global.producer.close();
 };
 
 export { init, send, close };

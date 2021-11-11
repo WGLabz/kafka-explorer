@@ -2,9 +2,10 @@ import VueRouter from "vue-router";
 
 import Logs from "./pages/Logs";
 import Config from "./pages/Config";
+import Home from "./pages/Home";
 
 const routes = [
-  { path: "/", component: require("./pages/Home"), icon: "mdi-folder" },
+  { path: "/", component: Home, icon: "mdi-folder" },
   {
     path: "/logs",
     component: Logs,

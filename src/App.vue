@@ -1,6 +1,6 @@
 <template>
   <v-app>
-    <v-app-bar id="app-bar" absolute app color="primary" height="40">
+    <v-app-bar id="app-bar"  app color="primary" height="40">
       <div class="d-flex align-center"></div>
       <v-spacer></v-spacer>
     </v-app-bar>
@@ -20,7 +20,6 @@
           <v-list-item-title></v-list-item-title>
         </v-list-item>
       </v-list>
-
       <template v-slot:append>
         <v-divider class="mx-4 mb-0"></v-divider>
         <v-list>
@@ -38,21 +37,43 @@
     <v-main class="mx-8 my-8">
       <router-view></router-view>
     </v-main>
+    <v-footer height="20"  padless app color="primary" fixed>
+      <NewFooter />
+    </v-footer>
   </v-app>
 </template>
 
 <script>
 import { routes } from "@/router";
+import NewFooter from "./components/Footer.vue";
 export default {
   name: "App",
 
-  components: {},
+  components: {
+    NewFooter,
+  },
 
   data: () => ({
     routes,
   }),
   mounted() {
     window.ipcRenderer.send("kafka", { command: "init" });
+
+    this.$nextTick(function () {
+      window.ipcRenderer.receive("userMessage", (args) => {
+        switch (args.type) {
+          case "ERROR":
+            this.$message.error(args.message, 4);
+            break;
+          case "WARN":
+            this.$message.warning(args.message, 4);
+            break;
+          case "INFO":
+            this.$message.success(args.message, 4);
+            break;
+        }
+      });
+    });
   },
 };
 </script>

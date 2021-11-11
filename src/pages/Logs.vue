@@ -1,64 +1,36 @@
 /* eslint-disable vue/no-v-model-argument */
 <template>
   <v-container>
-    <v-row height="25vh">
-      <v-col sm2>
-        <v-select :items="items" label="log Level" dense outlined></v-select
-      ></v-col>
-      <v-col>
-        <v-dialog ref="dialog" v-model="modal" persistent width="290px">
-          <template v-slot:activator="{ on, attrs }">
-            <v-text-field
-              v-model="startDate"
-              label="From"
-              dense
-              outlined
-              v-bind="attrs"
-              v-on="on"
-            ></v-text-field>
-          </template>
-          <v-date-picker v-model="startDate" scrollable>
-            <v-spacer></v-spacer>
-            <v-btn text color="primary" @click="modal = false">
-              Cancel
-            </v-btn>
-            <v-btn text color="primary" @click="$refs.dialog.save(startDate)">
-              OK
-            </v-btn>
-          </v-date-picker>
-        </v-dialog></v-col
-      >
-      <v-col>
-        <v-dialog ref="dialog" v-model="modal" persistent width="290px">
-          <template v-slot:activator="{ on, attrs }">
-            <v-text-field
-              v-model="endDate"
-              label="To"
-              dense
-              outlined
-              v-bind="attrs"
-              v-on="on"
-            ></v-text-field>
-          </template>
-          <v-date-picker v-model="endDate" scrollable>
-            <v-spacer></v-spacer>
-            <v-btn text color="primary" @click="modal = false">
-              Cancel
-            </v-btn>
-            <v-btn text color="primary" @click="$refs.dialog.save(endDate)">
-              OK
-            </v-btn>
-          </v-date-picker>
-        </v-dialog>
-      </v-col>
-      <v-col>
-        <v-btn outlined color="grey" @click="refresh">
-          <v-icon>
-            mdi-refresh
-          </v-icon>
-        </v-btn>
-      </v-col>
-    </v-row>
+    <a-row type="flex" justify="start" class="pb-8">
+      <a-col :span="4">
+        <a-select
+          label-in-value
+          :default-value="{ key: logTypeDfaultSelection }"
+          style="width: 90px"
+          @change="handleLogTypeSelectionChange"
+        >
+          <a-select-option
+            :value="option"
+            v-for="(option, index) in logTypeOptions"
+            :key="index"
+          >
+            {{ option }}
+          </a-select-option>
+        </a-select>
+      </a-col>
+      <a-col :span="11">
+        <a-range-picker
+          :show-time="{ format: 'HH:mm' }"
+          format="YYYY-MM-DD HH:mm"
+          style="width: 270px"
+          :default-value="[moment(new Date() - 24 * 60 * 60 * 1000), moment()]"
+          @ok="onOk"
+        />
+      </a-col>
+      <a-col :span="4">
+        <a-button @click="refresh"> <v-icon> mdi-refresh </v-icon></a-button>
+      </a-col>
+    </a-row>
     <v-row height="75vh">
       <v-col>
         <v-data-table
@@ -79,15 +51,8 @@ import moment from "moment";
 export default {
   data() {
     return {
-      select: "Info",
-      items: ["Info", "Warn", "Error"],
-      startDate: new Date(Date.now() - new Date().getTimezoneOffset() * 60000)
-        .toISOString()
-        .substr(0, 10),
-      endDate: new Date(Date.now() - new Date().getTimezoneOffset() * 60000)
-        .toISOString()
-        .substr(0, 10),
-      modal: false,
+      logTypeDfaultSelection: "WARN",
+      logTypeOptions: ["INFO", "WARN", "ERROR"],
       headers: [
         {
           text: "ID",
@@ -100,11 +65,15 @@ export default {
         { text: "message", value: "message" },
       ],
       logs: [],
+      // Values to be passed to backend
+      logType: "WARN",
+      startDate: new Date(new Date() - 24 * 60 * 60 * 1000),
+      endDate: new Date(),
     };
   },
   mounted() {
     this.loadLogs();
-    this.$nextTick(function() {
+    this.$nextTick(function () {
       window.ipcRenderer.receive("logGetResponse", (args) => {
         args.map((doc) => {
           doc.timestamp = moment(doc.timestamp).format("HH:mm DD/MM/YYYY");
@@ -114,12 +83,29 @@ export default {
     });
   },
   methods: {
+    moment,
     refresh() {
       this.loadLogs();
-      console.log(this.startDate);
     },
     loadLogs() {
-      window.ipcRenderer.send("logGet", {});
+      window.ipcRenderer.send("logGet", {
+        type: this.logType,
+        start: this.startDate,
+        end: this.endDate,
+      });
+      console.log({
+        type: this.logType,
+        start: this.startDate,
+        end: this.endDate,
+      });
+    },
+    onOk(value) {
+      this.startDate = value[0].toDate();
+      this.endDate = value[1].toDate();
+      console.log("onOk: ", value);
+    },
+    handleLogTypeSelectionChange(value) {
+      this.logType = value;
     },
   },
 };

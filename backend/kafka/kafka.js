@@ -1,24 +1,33 @@
-const { Kafka } = require('kafkajs')
-import { config } from "../persistence"
-let username, password, brokers, sasl, ssl
+const { Kafka } = require("kafkajs");
+import { config } from "../persistence";
 
-async function init() {
-  username = await config.readConfig('KAFKA_USERNAME');
-  password = await config.readConfig('KAFKA_PASSWORD');
-  brokers = await config.readConfig('KAFKA_BOOTSTRAP_SERVER');
-  sasl = username && password ? { username, password, mechanism: 'plain' } : null
-  ssl = !!sasl
-  brokers = brokers.split(',');
-}
+const kafkaInit = () => {
+  global.kafka = null;
+  let username, password, brokers, sasl, ssl;
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      if (global.kafka === null) reject(new Error("Failed to connect!"));
+      else resolve("Connected!");
+    }, 28000);
+    global.kafka = new Kafka({
+      clientId: "a-random-client-id",
+      brokers: async () => {
+        username = await config.readConfig("KAFKA_USERNAME");
+        password = await config.readConfig("KAFKA_PASSWORD");
+        brokers = await config.readConfig("KAFKA_BOOTSTRAP_SERVER");
+        sasl =
+          username && password
+            ? { username, password, mechanism: "plain" }
+            : null;
+        ssl = !!sasl;
+        brokers = brokers.split(",");
+        return brokers;
+      },
+      ssl,
+      sasl,
+      requestTimeout: 25000,
+    });
+  });
+};
 
-const kafka = new Kafka({
-  clientId: 'a-random-client-id',
-  brokers: async () => {
-    await init();
-    return brokers;
-  },
-  ssl,
-  sasl
-})
-
-export { kafka }
+export { kafkaInit };

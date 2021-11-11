@@ -1,4 +1,4 @@
-import { logs } from "../backend/persistence";
+import { logs } from "./persistence";
 import {
   ConsumerInit,
   ConsumerClose,
@@ -7,12 +7,16 @@ import {
   SendMessage,
   createTopic,
 } from "./kafka";
-const { ipcMain } = require("electron");
+import { config, kafka } from "./persistence";
+import { ipcMain } from "electron";
+import { sendUserMessage } from "./messaging";
+import { init as RunTimer } from "./Timer";
+import { closeAdmin } from "./kafka/admin/admin";
+import { kafkaInit } from "./kafka/kafka";
 
 ipcMain.on("logGet", (event, arg) => {
-  console.log(arg);
   logs
-    .getlogs()
+    .getlogs(arg)
     .then((logs_) => {
       event.reply("logGetResponse", logs_);
     })
@@ -21,17 +25,24 @@ ipcMain.on("logGet", (event, arg) => {
     });
 });
 
-ipcMain.on("kafka", (event,arg) => {
-  console.log('Kafka',arg);
+ipcMain.on("kafka", (event, arg) => {
   var command = arg.command;
   switch (command) {
     case "init":
-      ConsumerInit();
-      ProducerInit();
+      kafkaInit()
+        .then(() => {
+          ConsumerInit();
+          ProducerInit();
+          RunTimer();
+        })
+        .catch((err) => {
+          console.log(err);
+        });
       break;
     case "close":
       ConsumerClose();
       ProducerClose();
+      closeAdmin();
       break;
     case "message":
       var payload = arg.payload;
@@ -40,7 +51,90 @@ ipcMain.on("kafka", (event,arg) => {
 
     case "createtopic":
       var payload_ = arg.payload;
-      createTopic(payload_.topic);
+      kafka
+        .addTopic(payload_.name, payload_.type)
+        .then(() => {
+          sendUserMessage("INFO", "Topic added to the DB sucessfully");
+        })
+        .catch(() => {
+          sendUserMessage("ERROR", "Error adding topic to the DB");
+        });
+      if (payload.createincluseter) {
+        createTopic(
+          payload_.topic,
+          payload_.partition || 1,
+          payload_.replicationfactor || 1
+        )
+          .then(() => {
+            sendUserMessage("INFO", "Topic created in the cluster.");
+          })
+          .catch(() => {
+            sendUserMessage("ERROR", "Failed to create topic in the cluster.");
+          });
+      }
       break;
+    case "gettopics":
+      kafka.getTopics().then((topics) => {
+        event.reply("kafkaResponse", { topics: topics, type: "topics" });
+      });
+      break;
+
+    case "disabletopic":
+      kafka
+        .disableTopic(arg.id)
+        .then(() => {
+          sendUserMessage("INFO", "Topic disabled sucessfully");
+        })
+        .catch(() => {
+          sendUserMessage("ERROR", "Error disbaling topic.");
+        });
+      break;
+
+    case "enabletopic":
+      kafka
+        .enableTopic(arg.id)
+        .then(() => {
+          sendUserMessage("INFO", "Topic enabled sucessfully");
+        })
+        .catch(() => {
+          sendUserMessage("ERROR", "Error enabling topic.");
+        });
+      break;
+
+    case "removetopic":
+      kafka
+        .removeTopic(arg.id)
+        .then(() => {
+          sendUserMessage("INFO", "Topic removed from DB");
+        })
+        .catch(() => {
+          sendUserMessage("ERROR", "Error while removing topic from the DB.");
+        });
+      break;
+  }
+});
+
+// Configuration Related.
+ipcMain.on("conf", async (event, arg) => {
+  var command = arg.command;
+  if (command === "GET") {
+    event.reply("confres", {
+      type: "GET",
+      server: await config.readConfig("KAFKA_BOOTSTRAP_SERVER"),
+      username: await config.readConfig("KAFKA_USERNAME"),
+      password: await config.readConfig("KAFKA_PASSWORD"),
+    });
+  }
+  if (command === "SET") {
+    try {
+      console.log(arg);
+      await config.updateConfig("KAFKA_USERNAME", arg.username);
+      await config.updateConfig("KAFKA_PASSWORD", arg.password);
+      await config.updateConfig("KAFKA_BOOTSTRAP_SERVER", arg.server);
+
+      sendUserMessage("INFO", `Server config updated sucessfully!`);
+    } catch (e) {
+      sendUserMessage("ERROR", `Server config update failed!`);
+    }
   }
 });

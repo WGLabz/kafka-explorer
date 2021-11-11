@@ -1,5 +1,10 @@
-import { log, kafka,config } from "./persistence";
+// import { log, logs, kafka, config } from "./persistence";
 
+// logs
+//   .getlogs()
+//   .then((logs) => {
+//     console.log(logs);
+//   });
 // log('Hellp','WARN');
 // console.log(kafka.addTopic("test", "consume"));
 // kafka.addTopic("test3", "consume");
@@ -13,18 +18,29 @@ import { log, kafka,config } from "./persistence";
 // config.updateConfig('KAFKA_USERNAME','')
 // config.readConfig('KAFKA_BOOTSTRAP_SERVER').then((val) =>{
 //     console.log(val);
-// })
-import {
-  ConsumerInit,
-  ConsumerClose,
-  ProducerInit,
-  ProducerClose,
-  SendMessage,
-  createTopic,
-} from "./kafka";
+// // })
+// import {
+//   ConsumerInit,
+//   ConsumerClose,
+//   ProducerInit,
+//   ProducerClose,
+//   SendMessage,
+//   createTopic,
+// } from "./kafka";
 
-// ConsumerInit();
-ProducerInit().then(() =>{
+// // ConsumerInit();
+// ProducerInit().then(() =>{
 
-  SendMessage('test3','Helloworld','HeloWorld',0)
-});
+//   SendMessage('test3','Helloworld','HeloWorld',0)
+// });
+
+// kafka
+//   .admin()
+//   .describeCluster()
+//   .then((res) => {
+//     console.log(res);
+//   });
+
+import { init as RunTimer } from "./Timer";
+
+RunTimer();
