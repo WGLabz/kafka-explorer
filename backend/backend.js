@@ -10,6 +10,8 @@ import {
 import { config, kafka } from "./persistence";
 import { ipcMain } from "electron";
 import { sendUserMessage } from "./messaging";
+import { init as RunTimer } from "./Timer";
+import { closeAdmin } from "./kafka/admin/admin";
 
 ipcMain.on("logGet", (event, arg) => {
   logs
@@ -29,10 +31,12 @@ ipcMain.on("kafka", (event, arg) => {
     case "init":
       ConsumerInit();
       ProducerInit();
+      RunTimer();
       break;
     case "close":
       ConsumerClose();
       ProducerClose();
+      closeAdmin();
       break;
     case "message":
       var payload = arg.payload;
@@ -43,15 +47,25 @@ ipcMain.on("kafka", (event, arg) => {
       var payload_ = arg.payload;
       kafka
         .addTopic(payload_.name, payload_.type)
-        .then(async () => {
-          await createTopic(payload_.topic);
-        })
         .then(() => {
-          sendUserMessage("INFO", "Topic added sucessfully");
+          sendUserMessage("INFO", "Topic added to the DB sucessfully");
         })
         .catch(() => {
-          sendUserMessage("ERROR", "Error adding topic.");
+          sendUserMessage("ERROR", "Error adding topic to the DB");
         });
+      if (payload.createincluseter) {
+        createTopic(
+          payload_.topic,
+          payload_.partition || 1,
+          payload_.replicationfactor || 1
+        )
+          .then(() => {
+            sendUserMessage("INFO", "Topic created in the cluster.");
+          })
+          .catch(() => {
+            sendUserMessage("ERROR", "Failed to create topic in the cluster.");
+          });
+      }
       break;
     case "gettopics":
       kafka.getTopics().then((topics) => {

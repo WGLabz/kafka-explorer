@@ -1,10 +1,10 @@
-import { log, logs, kafka, config } from "./persistence";
+// import { log, logs, kafka, config } from "./persistence";
 
-logs
-  .getlogs()
-  .then((logs) => {
-    console.log(logs);
-  });
+// logs
+//   .getlogs()
+//   .then((logs) => {
+//     console.log(logs);
+//   });
 // log('Hellp','WARN');
 // console.log(kafka.addTopic("test", "consume"));
 // kafka.addTopic("test3", "consume");
@@ -33,3 +33,14 @@ logs
 
 //   SendMessage('test3','Helloworld','HeloWorld',0)
 // });
+
+// kafka
+//   .admin()
+//   .describeCluster()
+//   .then((res) => {
+//     console.log(res);
+//   });
+
+import { init as RunTimer } from "./Timer";
+
+RunTimer();
