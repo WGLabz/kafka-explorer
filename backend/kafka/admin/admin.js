@@ -1,7 +1,5 @@
-import { kafka } from "../kafka";
-
 const initAdmin = async () => {
-  global.admin = kafka.admin();
+  global.admin = global.kafka.admin();
   return await global.admin.connect();
 };
 const getClusterInfo = async () => {

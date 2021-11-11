@@ -9,4 +9,10 @@ const sendUserMessage = (type, message) => {
   });
 };
 
-export { sendUserMessage };
+const sendCluseterDetails = (data) => {
+  webContents.getAllWebContents().map((content) => {
+    content.send("clusterdata", data);
+  });
+};
+
+export { sendUserMessage, sendCluseterDetails };

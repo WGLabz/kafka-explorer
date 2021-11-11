@@ -1,13 +1,12 @@
-import { kafka } from "../kafka";
 import { log, kafka as kakfkadetails } from "../../persistence";
 import { sendUserMessage } from "../../messaging";
 
-// Create a Kafka consumer.
-const consumer = kafka.consumer({
-  groupId: "KAFKA_EXPLORER",
-});
-
 const init = async () => {
+  // Create a Kafka consumer.
+  const consumer = global.kafka.consumer({
+    groupId: "KAFKA_EXPLORER",
+  });
+  
   const topics = await kakfkadetails.getKafkaTopicsToConsume();
 
   // Connect
@@ -24,7 +23,10 @@ const init = async () => {
           fromBeginning: false,
         });
       } catch (e) {
-        sendUserMessage("ERROR", `Failed to subscribe to topic : ${topic.name}`);
+        sendUserMessage(
+          "ERROR",
+          `Failed to subscribe to topic : ${topic.name}`
+        );
       }
     }
   });

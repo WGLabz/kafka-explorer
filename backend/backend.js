@@ -12,6 +12,7 @@ import { ipcMain } from "electron";
 import { sendUserMessage } from "./messaging";
 import { init as RunTimer } from "./Timer";
 import { closeAdmin } from "./kafka/admin/admin";
+import { kafkaInit } from "./kafka/kafka";
 
 ipcMain.on("logGet", (event, arg) => {
   logs
@@ -25,13 +26,18 @@ ipcMain.on("logGet", (event, arg) => {
 });
 
 ipcMain.on("kafka", (event, arg) => {
-  console.log("Kafka", arg);
   var command = arg.command;
   switch (command) {
     case "init":
-      ConsumerInit();
-      ProducerInit();
-      RunTimer();
+      kafkaInit()
+        .then(() => {
+          ConsumerInit();
+          ProducerInit();
+          RunTimer();
+        })
+        .catch((err) => {
+          console.log(err);
+        });
       break;
     case "close":
       ConsumerClose();

@@ -1,7 +1,6 @@
-import { kafka } from "./kafka/kafka";
 
 const createTopic = async (topic, partition, replicationFactor) => {
-  const admin = kafka.admin();
+  const admin = global.kafka.admin();
   await admin.connect();
   await admin.createTopics({
     topics: [
