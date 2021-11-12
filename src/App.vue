@@ -37,7 +37,7 @@
     <v-main class="mx-8 my-8">
       <router-view></router-view>
     </v-main>
-    <v-footer height="20"  padless app color="primary" fixed>
+    <v-footer height="30"  padless app color="primary" fixed>
       <NewFooter />
     </v-footer>
   </v-app>
