@@ -2,8 +2,9 @@
 <template>
   <v-container>
     <a-row type="flex" justify="start" class="pb-8">
-      <a-col :span="4">
+      <a-col :span="24">
         <a-select
+          class="mr-3"
           label-in-value
           :default-value="{ key: logTypeDfaultSelection }"
           style="width: 90px"
@@ -17,17 +18,14 @@
             {{ option }}
           </a-select-option>
         </a-select>
-      </a-col>
-      <a-col :span="11">
         <a-range-picker
+          class="mr-3"
           :show-time="{ format: 'HH:mm' }"
           format="YYYY-MM-DD HH:mm"
           style="width: 270px"
           :default-value="[moment(new Date() - 24 * 60 * 60 * 1000), moment()]"
           @ok="onOk"
         />
-      </a-col>
-      <a-col :span="4">
         <a-button @click="refresh"> <v-icon> mdi-refresh </v-icon></a-button>
       </a-col>
     </a-row>
@@ -93,16 +91,10 @@ export default {
         start: this.startDate,
         end: this.endDate,
       });
-      console.log({
-        type: this.logType,
-        start: this.startDate,
-        end: this.endDate,
-      });
     },
     onOk(value) {
       this.startDate = value[0].toDate();
       this.endDate = value[1].toDate();
-      console.log("onOk: ", value);
     },
     handleLogTypeSelectionChange(value) {
       this.logType = value;

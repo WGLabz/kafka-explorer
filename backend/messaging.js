@@ -15,4 +15,13 @@ const sendCluseterDetails = (data) => {
   });
 };
 
-export { sendUserMessage, sendCluseterDetails };
+const sendKafkaMessages = (data) => {
+  let data_ = {};
+  data_.type = "auto";
+  data_.data = data;
+  webContents.getAllWebContents().map((content) => {
+    content.send("kafkamessagesresponse", data_);
+  });
+};
+
+export { sendUserMessage, sendCluseterDetails, sendKafkaMessages };

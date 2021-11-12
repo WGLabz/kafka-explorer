@@ -111,6 +111,16 @@ ipcMain.on("kafka", (event, arg) => {
           sendUserMessage("ERROR", "Error while removing topic from the DB.");
         });
       break;
+    case "getmessages":
+      kafka
+        .getMessages(arg)
+        .then((res) => {
+          event.reply("kafkamessagesresponse", res);
+        })
+        .catch(() => {
+          sendUserMessage("ERROR", "Failed loading kafka messages");
+        });
+      break;
   }
 });
 

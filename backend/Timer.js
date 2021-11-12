@@ -1,26 +1,33 @@
 import { initAdmin, getClusterInfo } from "./kafka/admin/admin";
-import { sendCluseterDetails } from "./messaging";
-import { log } from "./persistence";
+import { kafka } from "./persistence/index";
+import { sendCluseterDetails, sendKafkaMessages } from "./messaging";
 
 const init = () => {
   initAdmin();
   setInterval(() => {
+    // Send Cluster Info
     getClusterInfo()
       .then((res) => {
-        console.log("Sending cluster info.")
         res.timestamp = new Date();
         res.status = true;
         sendCluseterDetails(res);
       })
       .catch(() => {
-        console.log("Error ffetching cluster info.")
         sendCluseterDetails({
           timestamp: new Date(),
           status: false,
         });
-        log(`Failed to fetch cluster data`, "ERROR");
       });
-  }, 60000);
+    // Send latest messages
+    kafka
+      .getMessages({
+        start: new Date(new Date() - 24 * 1000 * 60 * 60),
+        end: new Date(),
+      })
+      .then((res) => {
+        sendKafkaMessages(res);
+      });
+  }, 30000);
 };
 
 export { init };
