@@ -1,9 +1,10 @@
-/* eslint-disable vue/no-v-model-argument */
 <template>
+  <!-- eslint-disable vue/no-v-model-argument  -->
   <v-container>
     <a-row type="flex" justify="start" class="pb-8">
-      <a-col :span="4">
+      <a-col :span="24">
         <a-select
+          class="mr-3"
           label-in-value
           :default-value="{ key: logTypeDfaultSelection }"
           style="width: 90px"
@@ -17,18 +18,18 @@
             {{ option }}
           </a-select-option>
         </a-select>
-      </a-col>
-      <a-col :span="11">
         <a-range-picker
+          v-model:value="rangepickerval"
+          class="mr-3"
           :show-time="{ format: 'HH:mm' }"
           format="YYYY-MM-DD HH:mm"
           style="width: 270px"
-          :default-value="[moment(new Date() - 24 * 60 * 60 * 1000), moment()]"
           @ok="onOk"
         />
-      </a-col>
-      <a-col :span="4">
-        <a-button @click="refresh"> <v-icon> mdi-refresh </v-icon></a-button>
+        <a-button class="mr-3" icon="search" @click="load" type="primary">
+        </a-button>
+        <a-button @click="refresh" class="float-right" icon="reload">
+        </a-button>
       </a-col>
     </a-row>
     <v-row height="75vh">
@@ -51,6 +52,7 @@ import moment from "moment";
 export default {
   data() {
     return {
+      rangepickerval: [moment(new Date() - 24 * 60 * 60 * 1000), moment()],
       logTypeDfaultSelection: "WARN",
       logTypeOptions: ["INFO", "WARN", "ERROR"],
       headers: [
@@ -72,7 +74,6 @@ export default {
     };
   },
   mounted() {
-    this.loadLogs();
     this.$nextTick(function () {
       window.ipcRenderer.receive("logGetResponse", (args) => {
         args.map((doc) => {
@@ -81,19 +82,23 @@ export default {
         this.logs = args;
       });
     });
+    this.load();
   },
   methods: {
     moment,
-    refresh() {
+    load() {
+      this.logs = [];
       this.loadLogs();
+    },
+    refresh() {
+      this.rangepickerval = [
+        moment(new Date() - 24 * 60 * 60 * 1000),
+        moment(),
+      ];
+      this.load();
     },
     loadLogs() {
       window.ipcRenderer.send("logGet", {
-        type: this.logType,
-        start: this.startDate,
-        end: this.endDate,
-      });
-      console.log({
         type: this.logType,
         start: this.startDate,
         end: this.endDate,
@@ -102,10 +107,9 @@ export default {
     onOk(value) {
       this.startDate = value[0].toDate();
       this.endDate = value[1].toDate();
-      console.log("onOk: ", value);
     },
     handleLogTypeSelectionChange(value) {
-      this.logType = value;
+      this.logType = value.key;
     },
   },
 };

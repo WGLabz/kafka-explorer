@@ -126,7 +126,7 @@ const kafka = {
           isActive: true,
         });
       } else {
-        console.log("Topic already exists!");
+        // console.log("Topic already exists!");
         return false;
       }
     } catch (err) {
@@ -135,6 +135,17 @@ const kafka = {
   },
   getTopics: async () => {
     return await db.topics.find({}).sort({ lastedit: -1 });
+  },
+  getMessages: async (query) => {
+    const messages = await db.messages
+      .find({
+        $and: [
+          { timestamp: { $gt: query.start } },
+          { timestamp: { $lt: query.end } },
+        ],
+      })
+      .sort({ timestamp: -1 });
+    return messages;
   },
 };
 

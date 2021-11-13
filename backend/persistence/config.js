@@ -1,7 +1,7 @@
 const Datastore = require("nedb-promises");
 var path = require("path");
 
-console.log("Loading DB");
+// console.log("Loading DB");
 
 var db = {};
 var FOLDER_PATH = "kafka_explorer";

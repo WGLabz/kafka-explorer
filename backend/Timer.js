@@ -1,26 +1,54 @@
 import { initAdmin, getClusterInfo } from "./kafka/admin/admin";
-import { sendCluseterDetails } from "./messaging";
+import { kafka } from "./persistence/index";
+import {
+  sendCluseterDetails,
+  sendKafkaMessages,
+  sendKafkaTopics,
+} from "./messaging";
 import { log } from "./persistence";
 
 const init = () => {
   initAdmin();
   setInterval(() => {
-    getClusterInfo()
-      .then((res) => {
-        console.log("Sending cluster info.")
-        res.timestamp = new Date();
-        res.status = true;
-        sendCluseterDetails(res);
-      })
-      .catch(() => {
-        console.log("Error ffetching cluster info.")
-        sendCluseterDetails({
-          timestamp: new Date(),
-          status: false,
+    try {
+      // Send Cluster Info
+      getClusterInfo()
+        .then((res) => {
+          res.timestamp = new Date();
+          res.status = true;
+          sendCluseterDetails(res);
+        })
+        .catch(() => {
+          sendCluseterDetails({
+            timestamp: new Date(),
+            status: false,
+            brokers: [
+              {
+                host: "Not connected",
+                nodeId: -1,
+              },
+            ],
+            controller: -1,
+          });
         });
-        log(`Failed to fetch cluster data`, "ERROR");
+      // Send latest messages
+      kafka
+        .getMessages({
+          start: new Date(new Date() - 24 * 1000 * 60 * 60),
+          end: new Date(),
+        })
+        .then((res) => {
+          sendKafkaMessages(res);
+        });
+
+      // Senda all kafka topics
+      kafka.getTopics().then((res) => {
+        sendKafkaTopics(res);
       });
-  }, 60000);
+    } catch (e) {
+      log(`Error occured in timer!` + e, "ERROR");
+    }
+  }, 15000);
 };
 
 export { init };
