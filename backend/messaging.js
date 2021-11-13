@@ -24,4 +24,18 @@ const sendKafkaMessages = (data) => {
   });
 };
 
-export { sendUserMessage, sendCluseterDetails, sendKafkaMessages };
+const sendKafkaTopics = (data) => {
+  let data_ = {};
+  data_.type = "auto";
+  data_.data = data;
+  webContents.getAllWebContents().map((content) => {
+    content.send("kafkatopics", data_);
+  });
+};
+
+export {
+  sendUserMessage,
+  sendCluseterDetails,
+  sendKafkaMessages,
+  sendKafkaTopics,
+};

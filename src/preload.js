@@ -16,6 +16,7 @@ contextBridge.exposeInMainWorld("ipcRenderer", {
       "confres",
       "clusterdata",
       "kafkamessagesresponse",
+      "kafkatopics",
     ];
     if (validChannels.includes(channel)) {
       ipcRenderer.on(channel, (event, ...args) => func(...args));

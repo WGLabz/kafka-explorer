@@ -87,7 +87,6 @@ export default {
   methods: {
     moment,
     load() {
-      console.log(this.logType);
       this.logs = [];
       this.loadLogs();
     },

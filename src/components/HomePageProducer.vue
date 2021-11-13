@@ -17,9 +17,22 @@
       type="primary"
     />
 
-    <a-button style="margin-left: 8px" slot="extra" type="dashed" size="small">
-      Topics <a-icon type="down" />
-    </a-button>
+    <a-select
+      class="mr-3"
+      slot="extra"
+      size="small"
+      label-in-value
+      style="width: 90px; margin-left: 8px"
+      @change="handletopicselection"
+    >
+      <a-select-option
+        :value="option.name"
+        v-for="(option, index) in topics"
+        :key="index"
+      >
+        {{ option.name }}
+      </a-select-option>
+    </a-select>
     <a-tabs
       v-model="activeKey"
       hide-add
@@ -33,28 +46,49 @@
         :tab="pane.title"
         :closable="pane.closable"
       >
-        {{ pane.content }}
+        <producer-tab-content :topic="pane.title" />
       </a-tab-pane>
     </a-tabs>
   </a-card>
 </template>
 
 <script>
+import ProducerTabContent from "./ProducerTabContent.vue";
 export default {
   data() {
-    const panes = [
-      { title: "Tab 1", content: "Content of Tab 1", key: "1" },
-      { title: "Tab 2", content: "Content of Tab 2", key: "2" },
-    ];
     return {
-      activeKey: panes[0].key,
-      panes,
+      activeKey: 0,
+      panes: [],
       newTabIndex: 0,
       topic: "",
+      topics: [],
+      addedPanes: [],
     };
   },
   methods: {
     onEdit() {},
+    handletopicselection(val) {
+      let paneName = val.key;
+      // if(this.panes.find((item)=> item.title === val))
+      if (this.addedPanes.indexOf(paneName) === -1) {
+        this.addedPanes.push(paneName);
+        this.panes.push({ title: paneName });
+      }
+    },
+  },
+  components: {
+    ProducerTabContent,
+  },
+  mounted() {
+    this.$nextTick(function () {
+      window.ipcRenderer.receive("kafkatopics", (args) => {
+        if (args.type === "auto") {
+          this.topics = args.data.filter(
+            (msg) => msg.type === "produce" && msg.isActive
+          );
+        }
+      });
+    });
   },
 };
 </script>

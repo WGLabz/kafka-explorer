@@ -45,12 +45,12 @@
 
 // RunTimer();
 
-import { kafka } from "./persistence/index";
-kafka
-  .getMessages({
-    start: new Date(new Date() - 24 * 1000 * 60 * 60),
-    end: new Date(),
-  })
-  .then((res) => {
-    console.log(res);
-  });
+// import { kafka } from "./persistence/index";
+// kafka
+//   .getMessages({
+//     start: new Date(new Date() - 24 * 1000 * 60 * 60),
+//     end: new Date(),
+//   })
+//   .then((res) => {
+//     console.log(res);
+//   });

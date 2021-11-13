@@ -1,6 +1,10 @@
 import { initAdmin, getClusterInfo } from "./kafka/admin/admin";
 import { kafka } from "./persistence/index";
-import { sendCluseterDetails, sendKafkaMessages } from "./messaging";
+import {
+  sendCluseterDetails,
+  sendKafkaMessages,
+  sendKafkaTopics,
+} from "./messaging";
 import { log } from "./persistence";
 
 const init = () => {
@@ -36,10 +40,15 @@ const init = () => {
         .then((res) => {
           sendKafkaMessages(res);
         });
+
+      // Senda all kafka topics
+      kafka.getTopics().then((res) => {
+        sendKafkaTopics(res);
+      });
     } catch (e) {
       log(`Error occured in timer!` + e, "ERROR");
     }
-  }, 30000);
+  }, 15000);
 };
 
 export { init };

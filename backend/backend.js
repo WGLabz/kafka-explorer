@@ -48,7 +48,17 @@ ipcMain.on("kafka", (event, arg) => {
       break;
     case "message":
       var payload = arg.payload;
-      SendMessage(payload.topic, payload.key, payload.value, payload.partition);
+      SendMessage(payload.topic, payload.key, payload.value, payload.partition)
+        .then((res) => {
+          if (res) {
+            sendUserMessage("INFO", "Message published sucessfully.");
+          } else {
+            sendUserMessage("ERROR", "Failed to publish message.");
+          }
+        })
+        .catch(() => {
+          sendUserMessage("ERROR", "Failed to publish message.");
+        });
       break;
 
     case "createtopic":
