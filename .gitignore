@@ -24,3 +24,6 @@ pnpm-debug.log*
 database/*
 package-lock.json
 *.db
+
+dist_electron/*
+kafka_explorer/*
