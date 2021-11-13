@@ -5,7 +5,7 @@
       <v-spacer></v-spacer>
     </v-app-bar>
     <Sidebar />
-    <v-main class="mx-8 my-8">
+    <v-main class="mx-2 my-2">
       <router-view></router-view>
     </v-main>
     <v-footer height="30" padless app color="primary" fixed>
