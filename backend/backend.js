@@ -71,7 +71,7 @@ ipcMain.on("kafka", (event, arg) => {
         .catch(() => {
           sendUserMessage("ERROR", "Error adding topic to the DB");
         });
-      if (payload.createincluseter) {
+      if (payload_.createincluseter) {
         createTopic(
           payload_.topic,
           payload_.partition || 1,

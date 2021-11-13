@@ -1,10 +1,16 @@
 <template>
-  <a-row :gutter="16">
-    <a-col :span="14">
-      <a-input placeholder="New Topic" allow-clear v-model="topic" />
-    </a-col>
-    <a-col :span="5">
+  <div>
+    <a-space>
+      Topic:
+      <a-input
+        placeholder="New Topic"
+        allow-clear
+        v-model="topic"
+        size="small"
+      />
+      Type:
       <a-select
+        size="small"
         label-in-value
         :default-value="{ key: topicdefaultval }"
         @change="handletopicselectionchange"
@@ -16,14 +22,16 @@
         >
           {{ option }}
         </a-select-option>
-      </a-select></a-col
-    >
-    <a-col :span="5">
-      <a-button type="primary" @click="savetopic">
-        <a-icon type="check" style="color: white" />
-      </a-button>
-    </a-col>
-  </a-row>
+      </a-select>
+      <a-button size="small" type="primary" @click="savetopic" icon="check" />
+    </a-space>
+    <br />
+    <a-space>
+      <a-checkbox style="margin-top: 10px" :checked="createincluseter">
+        Add topic to the cluster
+      </a-checkbox>
+    </a-space>
+  </div>
 </template>
 <script>
 export default {
@@ -33,6 +41,7 @@ export default {
       topictype: "",
       topicdefaultval: "Consume",
       topictypeoptions: ["Consume", "Produce"],
+      createincluseter: false,
     };
   },
   methods: {
@@ -42,7 +51,11 @@ export default {
     savetopic() {
       window.ipcRenderer.send("kafka", {
         command: "createtopic",
-        payload: { name: this.topic, type: this.topictype },
+        payload: {
+          name: this.topic,
+          type: this.topictype,
+          createincluseter: this.createincluseter,
+        },
       });
     },
   },

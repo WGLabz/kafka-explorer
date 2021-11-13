@@ -105,7 +105,8 @@ export default {
             .filter((msg) => msg.type === "produce" && msg.topic === this.topic)
             .sort((a, b) => {
               return b.timestamp - a.timestamp;
-            });
+            })
+            .slice(0, 10);
           // console.log(this.publishedMessages);
         }
       });

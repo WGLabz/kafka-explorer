@@ -48,7 +48,7 @@ export default {
             .sort((a, b) => {
               return b.timestamp - a.timestamp;
             })
-            .slice(0, 10);
+            .slice(0, 5);
           this.consumerStatus = "green";
         }
       });
