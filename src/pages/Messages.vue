@@ -1,4 +1,5 @@
 <template>
+  <!-- eslint-disable vue/no-v-model-argument  -->
   <div>
     <a-row type="flex" justify="start" class="mb-5">
       <a-col :span="24">
@@ -7,16 +8,24 @@
           :show-time="{ format: 'HH:mm' }"
           format="YYYY-MM-DD HH:mm"
           style="width: 270px"
-          :default-value="[moment(new Date() - 24 * 60 * 60 * 1000), moment()]"
+          v-model:vlue="rangepickerval"
           @ok="onOk"
         />
-        <a-button class="mr-3" icon="reload" @click="getMessages"> </a-button>
+        <a-button
+          class="mr-3"
+          icon="search"
+          @click="getMessages"
+          type="primary"
+        >
+        </a-button>
         <a-switch @change="refreshstatusbuttontoggled" class="float-right">
           <!-- eslint-disable-next-line vue/no-deprecated-slot-attribute -->
           <a-icon slot="checkedChildren" type="reload" />
           <!-- eslint-disable-next-line vue/no-deprecated-slot-attribute -->
           <a-icon slot="unCheckedChildren" type="close" />
         </a-switch>
+        <a-button class="mr-3 float-right" icon="reload" @click="reset">
+        </a-button>
       </a-col>
     </a-row>
     <a-row :gutter="16">
@@ -40,6 +49,7 @@ export default {
   data() {
     return {
       refreshstatus: false,
+      rangepickerval: [],
       addnewtopicmodalvisibility: false,
       server: "",
       startDate: new Date(new Date() - 24 * 60 * 60 * 1000),
@@ -114,7 +124,7 @@ export default {
   },
   mounted() {
     this.$nextTick(function () {
-      this.getMessages();
+      this.reset();
       window.ipcRenderer.receive("kafkamessagesresponse", (args) => {
         if (args.type === "auto" && !this.refreshstatus) {
           return;
@@ -138,6 +148,9 @@ export default {
   methods: {
     refreshstatusbuttontoggled(checked) {
       this.refreshstatus = checked;
+      if (checked)
+        this.$message.success("Messages will load automatically.", 4);
+      else this.$message.warning("Messages will not load automatically.", 4);
     },
     onOk(value) {
       this.startDate = value[0].toDate();
@@ -153,6 +166,13 @@ export default {
       this.addnewtopicmodalvisibility = false;
     },
     moment,
+    reset() {
+      this.rangepickerval = [
+        moment(new Date() - 24 * 60 * 60 * 1000),
+        moment(),
+      ];
+      this.getMessages();
+    },
   },
   // created() {
   //   this.poolMessages();
