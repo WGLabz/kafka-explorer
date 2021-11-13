@@ -3,14 +3,14 @@ import { sendUserMessage } from "../../messaging";
 
 const init = async () => {
   // Create a Kafka consumer.
-  const consumer = global.kafka.consumer({
+  global.consumer = global.kafka.consumer({
     groupId: "KAFKA_EXPLORER",
   });
   
   const topics = await kakfkadetails.getKafkaTopicsToConsume();
 
   // Connect
-  await consumer.connect();
+  await global.consumer.connect();
 
   // Subscribe to Kafka topic
   topics.map(async (topic) => {
@@ -18,7 +18,7 @@ const init = async () => {
       // console.log(`Subscribing to topic ${topic.name}`, "INFO");
       log(`Subscribing to topic ${topic.name}`, "INFO");
       try {
-        await consumer.subscribe({
+        await global.consumer.subscribe({
           topic: topic.name,
           fromBeginning: false,
         });
@@ -32,7 +32,7 @@ const init = async () => {
   });
 
   // Listen to incoming messages
-  await consumer.run({
+  await global.consumer.run({
     eachMessage: ({ topic, partition, message }) => {
       var msg = {
         key: message.key ? message.key.toString() : "",
@@ -54,7 +54,7 @@ const init = async () => {
 
 const close = async () => {
   try {
-    await consumer.disconnect();
+    await global.consumer.disconnect();
   } catch (e) {
     log(`Failed to disconnect consumer gracefully!`, "ERROR");
   }

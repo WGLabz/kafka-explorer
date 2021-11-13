@@ -33,7 +33,7 @@ const send = async (topic, messagekey, messagevalue, partition) => {
 };
 
 const close = async () => {
-  global.producer.close();
+  global.producer.disconnect();
 };
 
 export { init, send, close };

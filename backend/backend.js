@@ -10,8 +10,8 @@ import {
 import { config, kafka } from "./persistence";
 import { ipcMain } from "electron";
 import { sendUserMessage } from "./messaging";
-import { init as RunTimer } from "./Timer";
-import { closeAdmin } from "./kafka/admin/admin";
+import { init as RunTimer } from "./timer";
+import { closeAdmin, initAdmin } from "./kafka/admin/admin";
 import { kafkaInit } from "./kafka/kafka";
 
 ipcMain.on("logGet", (event, arg) => {
@@ -34,11 +34,13 @@ ipcMain.on("kafka", (event, arg) => {
           ConsumerInit();
           ProducerInit();
           RunTimer();
+          console.log("Kafka Initialized");
         })
         .catch((err) => {
-          console.log(err);
+          console.log("Kafka", err);
         });
       break;
+
     case "close":
       ConsumerClose();
       ProducerClose();
@@ -143,8 +145,54 @@ ipcMain.on("conf", async (event, arg) => {
       await config.updateConfig("KAFKA_BOOTSTRAP_SERVER", arg.server);
 
       sendUserMessage("INFO", `Server config updated sucessfully!`);
+
+      // Stop existing client
+      try {
+        ConsumerClose();
+        ProducerClose();
+        closeAdmin();
+
+        sendUserMessage("WARN", `Disconnnected!`);
+      } catch (e) {
+        sendUserMessage("ERROR", `Failed to disconnect!`);
+      }
+      try {
+        //Start again
+        kafkaInit()
+          .then(() => {
+            ConsumerInit();
+            ProducerInit();
+            initAdmin();
+            console.log("Kafka Initialized");
+          })
+          .catch((err) => {
+            console.log("Kafka", err);
+          });
+
+        sendUserMessage("INFO", `Reconnected!`);
+      } catch (e) {
+        sendUserMessage("ERROR", `Failed to reconnect!`);
+      }
     } catch (e) {
       sendUserMessage("ERROR", `Server config update failed!`);
     }
+  }
+  if (command === "STOP") {
+    ConsumerClose();
+    ProducerClose();
+    closeAdmin();
+  }
+
+  if (command === "START") {
+    kafkaInit()
+      .then(() => {
+        ConsumerInit();
+        ProducerInit();
+        initAdmin();
+        console.log("Kafka Initialized");
+      })
+      .catch((err) => {
+        console.log("Kafka", err);
+      });
   }
 });

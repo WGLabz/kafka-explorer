@@ -39,7 +39,7 @@ export default {
   data() {
     return {
       clusterInfo: {},
-      controller: "",
+      controller: "Not Connected",
     };
   },
   mounted() {
