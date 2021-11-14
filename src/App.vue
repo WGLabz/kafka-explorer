@@ -8,7 +8,7 @@
     <v-main class="mx-2 my-2">
       <router-view></router-view>
     </v-main>
-    <v-footer height="30" padless app color="primary" fixed>
+    <v-footer height="20" padless app color="primary" fixed>
       <NewFooter />
     </v-footer>
   </v-app>
@@ -102,4 +102,10 @@ export default {
 
         +rtl()
           margin-left: 8px
+</style>
+<style>
+html,
+body {
+  overflow: auto !important;
+}
 </style>

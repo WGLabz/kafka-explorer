@@ -1,6 +1,6 @@
 <template>
   <!-- eslint-disable vue/no-v-model-argument  -->
-  <div>
+  <div class="mt-4">
     <a-row type="flex" justify="start" class="mb-5">
       <a-col :span="24">
         <a-range-picker
@@ -34,9 +34,9 @@
           bordered
           :data-source="kafkamessages"
           :columns="columns"
-          height="600px"
           size="small"
           :rowKey="(record) => record._id"
+          :pagination="paginationSettings"
         >
         </a-table>
       </a-col>
@@ -58,6 +58,10 @@ export default {
       password: "",
       polling: null,
       kafkamessages: [],
+      paginationSettings: {
+        size: "small",
+        pageSize: 6,
+      },
       columns: [
         {
           title: "Time",

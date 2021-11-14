@@ -69,8 +69,5 @@
     "not dead"
   ],
   "_id": "kafka-explorer@0.1.0",
-  "readme": "README.md",
-  "build": {
-    "appId": "in.wglabz.kafkaexplorer"
-  }
+  "readme": "README.md"
 }

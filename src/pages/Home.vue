@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="mt-4">
     <a-row type="flex" :gutter="[8, 8]">
       <a-col :span="16" :order="1">
         <home-page-producer />
