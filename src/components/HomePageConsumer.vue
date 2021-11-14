@@ -1,6 +1,6 @@
 <template>
   <!-- eslint-disable vue/no-deprecated-slot-attribute  -->
-  <a-card size="small" title="Consumed">
+  <a-card size="small" title="Consumed" style="height: 250px">
     <a-badge slot="extra" :color="consumerStatus"></a-badge>
     <a-input
       placeholder="Topic"

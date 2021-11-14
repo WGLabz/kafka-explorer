@@ -24,6 +24,7 @@ async function createWindow() {
       preload: path.join(__dirname, "preload.js"),
       enableRemoteModule: true,
     },
+    icon: path.join(__dirname, "icon.png"),
   });
   global.mainWindow = win;
   if (process.env.WEBPACK_DEV_SERVER_URL) {
