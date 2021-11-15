@@ -14,6 +14,34 @@ import { init as RunTimer } from "./timer";
 import { closeAdmin, initAdmin } from "./kafka/admin/admin";
 import { kafkaInit } from "./kafka/kafka";
 
+const reconnectKafka = () => {
+  // Stop existing client
+  try {
+    ConsumerClose();
+    ProducerClose();
+    closeAdmin();
+    sendUserMessage("WARN", `Disconnnected!`);
+  } catch (e) {
+    sendUserMessage("ERROR", `Failed to disconnect!`);
+  }
+  try {
+    //Start again
+    kafkaInit()
+      .then(() => {
+        ConsumerInit();
+        ProducerInit();
+        initAdmin();
+        console.log("Kafka Initialized");
+      })
+      .catch((err) => {
+        console.log("Kafka", err);
+      });
+
+    sendUserMessage("INFO", `Reconnected!`);
+  } catch (e) {
+    sendUserMessage("ERROR", `Failed to reconnect!`);
+  }
+};
 ipcMain.on("logGet", (event, arg) => {
   logs
     .getlogs(arg)
@@ -84,6 +112,7 @@ ipcMain.on("kafka", (event, arg) => {
             sendUserMessage("ERROR", "Failed to create topic in the cluster.");
           });
       }
+      reconnectKafka();
       break;
     case "gettopics":
       kafka.getTopics().then((topics) => {
@@ -100,6 +129,7 @@ ipcMain.on("kafka", (event, arg) => {
         .catch(() => {
           sendUserMessage("ERROR", "Error disbaling topic.");
         });
+      reconnectKafka();
       break;
 
     case "enabletopic":
@@ -111,6 +141,7 @@ ipcMain.on("kafka", (event, arg) => {
         .catch(() => {
           sendUserMessage("ERROR", "Error enabling topic.");
         });
+      reconnectKafka();
       break;
 
     case "removetopic":
@@ -122,6 +153,7 @@ ipcMain.on("kafka", (event, arg) => {
         .catch(() => {
           sendUserMessage("ERROR", "Error while removing topic from the DB.");
         });
+      reconnectKafka();
       break;
     case "getmessages":
       kafka
@@ -153,36 +185,8 @@ ipcMain.on("conf", async (event, arg) => {
       await config.updateConfig("KAFKA_USERNAME", arg.username);
       await config.updateConfig("KAFKA_PASSWORD", arg.password);
       await config.updateConfig("KAFKA_BOOTSTRAP_SERVER", arg.server);
-
+      reconnectKafka();
       sendUserMessage("INFO", `Server config updated sucessfully!`);
-
-      // Stop existing client
-      try {
-        ConsumerClose();
-        ProducerClose();
-        closeAdmin();
-
-        sendUserMessage("WARN", `Disconnnected!`);
-      } catch (e) {
-        sendUserMessage("ERROR", `Failed to disconnect!`);
-      }
-      try {
-        //Start again
-        kafkaInit()
-          .then(() => {
-            ConsumerInit();
-            ProducerInit();
-            initAdmin();
-            console.log("Kafka Initialized");
-          })
-          .catch((err) => {
-            console.log("Kafka", err);
-          });
-
-        sendUserMessage("INFO", `Reconnected!`);
-      } catch (e) {
-        sendUserMessage("ERROR", `Failed to reconnect!`);
-      }
     } catch (e) {
       sendUserMessage("ERROR", `Server config update failed!`);
     }

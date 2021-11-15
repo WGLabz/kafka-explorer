@@ -49,11 +49,14 @@
               >{{ text }}</a-tag
             >
           </template>
+          <template v-slot:id="text">
+            {{ text.substring(0, 5) }}
+          </template>
         </a-table>
       </a-col>
     </a-row>
-    <a-row class="mt-3">
-      <a-card>
+    <a-row class="mt-1">
+      <a-card style="height: 60px" size="small">
         <a-tag
           :color="
             selectedlogtype === 'INFO'
@@ -91,6 +94,8 @@ export default {
           align: "start",
           sortable: false,
           dataIndex: "_id",
+          width: "70px",
+          scopedSlots: { customRender: "id" },
         },
         { title: "Date", dataIndex: "timestamp" },
         {

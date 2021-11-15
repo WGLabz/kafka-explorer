@@ -1,7 +1,7 @@
 <template>
   <!-- eslint-disable vue/no-v-model-argument  -->
   <div class="mt-4">
-    <a-row type="flex" justify="start" class="mb-5">
+    <a-row type="flex" justify="start" class="mb-4">
       <a-col :span="24">
         <a-range-picker
           class="mr-3"
