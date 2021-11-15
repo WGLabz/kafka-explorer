@@ -16,6 +16,7 @@
       icon="plus"
       size="small"
       type="primary"
+      @click="hndletopicaddition"
     />
     <p v-for="(data_, index) in data" :key="index">
       <a-tag>{{ data_.topic }}</a-tag>
@@ -68,6 +69,16 @@ export default {
       return moment().diff(moment(time), "minutes") < 5;
     },
     moment,
+    hndletopicaddition() {
+      window.ipcRenderer.send("kafka", {
+        command: "createtopic",
+        payload: {
+          name: this.topic,
+          type: "consume",
+          createincluseter: false,
+        },
+      });
+    },
   },
 };
 </script>

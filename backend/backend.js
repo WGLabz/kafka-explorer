@@ -63,9 +63,12 @@ ipcMain.on("kafka", (event, arg) => {
           ProducerInit();
           RunTimer();
           console.log("Kafka Initialized");
+
+          event.reply("userMessage", { type: "load", value: true });
         })
         .catch((err) => {
           console.log("Kafka", err);
+          event.reply("userMessage", { type: "load", value: false });
         });
       break;
 
@@ -93,8 +96,9 @@ ipcMain.on("kafka", (event, arg) => {
       var payload_ = arg.payload;
       kafka
         .addTopic(payload_.name, payload_.type)
-        .then(() => {
-          sendUserMessage("INFO", "Topic added to the DB sucessfully");
+        .then((res) => {
+          if (res) sendUserMessage("INFO", "Topic added to the DB sucessfully");
+          else sendUserMessage("WARN", "Topic already exists!");
         })
         .catch(() => {
           sendUserMessage("ERROR", "Error adding topic to the DB");

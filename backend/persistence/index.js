@@ -103,21 +103,20 @@ const kafka = {
   },
   addTopic: async (topic, type) => {
     try {
-      const topic_ = await db.topics
-        .find({
-          $and: [
-            {
-              type: type,
-            },
-            {
-              name: topic,
-            },
-          ],
-        })
-        .sort();
+      const topic_ = await db.topics.find({
+        $and: [
+          {
+            type: type,
+          },
+          {
+            name: topic,
+          },
+        ],
+      });
+
       if (topic_.length === 0) {
         // Check if the topic already exists with same type
-        await db.topics.insert({
+        return await db.topics.insert({
           created: new Date(),
           name: topic,
           type: type,
@@ -126,8 +125,9 @@ const kafka = {
           isActive: true,
         });
       } else {
+        console.log("Exist");
         // console.log("Topic already exists!");
-        return false;
+        return Promise.resolve("false");
       }
     } catch (err) {
       return false;

@@ -15,6 +15,7 @@
       icon="plus"
       size="small"
       type="primary"
+      @click="hndletopicaddition"
     />
 
     <a-select
@@ -74,6 +75,20 @@ export default {
         this.addedPanes.push(paneName);
         this.panes.push({ title: paneName });
       }
+    },
+    hndletopicaddition() {
+      if (this.addedPanes.indexOf(this.topic) === -1) {
+        this.addedPanes.push(this.topic);
+        this.panes.push({ title: this.topic });
+      }
+      window.ipcRenderer.send("kafka", {
+        command: "createtopic",
+        payload: {
+          name: this.topic,
+          type: "produce",
+          createincluseter: false,
+        },
+      });
     },
   },
   components: {
