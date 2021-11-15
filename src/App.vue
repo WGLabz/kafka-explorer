@@ -5,10 +5,25 @@
       <v-spacer></v-spacer>
     </v-app-bar>
     <Sidebar />
-    <v-main class="mx-2 my-2">
+    <v-main class="mx-2 my-2" v-if="loaded === 1">
       <router-view></router-view>
     </v-main>
-    <v-footer height="30" padless app color="primary" fixed>
+    <v-main class="mx-2 my-2" v-else-if="loaded === 0">
+      <div
+        style="width: 100%; text-align: center; position: absolute; top: 50%"
+      >
+        <a-spin />
+      </div>
+    </v-main>
+    <v-main class="mx-2 my-2" v-else-if="loaded === -1">
+      <div
+        style="width: 100%; text-align: center; position: absolute; top: 50%"
+      >
+        <a-alert message="Configure the app in config page please!!" banner />
+      </div>
+    </v-main>
+
+    <v-footer height="20" padless app color="primary" fixed>
       <NewFooter />
     </v-footer>
   </v-app>
@@ -19,7 +34,11 @@ import NewFooter from "./components/Footer.vue";
 import Sidebar from "./components/Sidebar.vue";
 export default {
   name: "App",
-
+  data() {
+    return {
+      loaded: 0,
+    };
+  },
   components: {
     NewFooter,
     Sidebar,
@@ -40,9 +59,15 @@ export default {
           case "INFO":
             this.$message.success(args.message, 4);
             break;
+          case "load":
+            this.loaded = args.value ? 1 : 0;
+            break;
         }
       });
     });
+    setTimeout(() => {
+      this.loaded = this.loaded === 1 ? 1 : -1;
+    }, 70000);
   },
 };
 </script>
@@ -102,4 +127,10 @@ export default {
 
         +rtl()
           margin-left: 8px
+</style>
+<style>
+html,
+body {
+  overflow: auto !important;
+}
 </style>

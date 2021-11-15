@@ -54,3 +54,9 @@
 //   .then((res) => {
 //     console.log(res);
 //   });
+
+import { kafka } from "./persistence";
+
+kafka.addTopic("test329ddd43dd", "consume").then((res) => {
+  console.log(res);
+});

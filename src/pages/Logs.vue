@@ -1,7 +1,7 @@
 <template>
   <!-- eslint-disable vue/no-v-model-argument  -->
-  <v-container>
-    <a-row type="flex" justify="start" class="pb-8">
+  <div class="mt-4">
+    <a-row type="flex" justify="start" class="mb-5">
       <a-col :span="24">
         <a-select
           class="mr-3"
@@ -32,17 +32,44 @@
         </a-button>
       </a-col>
     </a-row>
-    <v-row height="75vh">
-      <v-col>
-        <v-data-table
-          :headers="headers"
-          :items="logs"
-          :items-per-page="8"
-          class="elevation-1"
-        ></v-data-table>
-      </v-col>
-    </v-row>
-  </v-container>
+    <a-row :gutter="16">
+      <a-col>
+        <a-table
+          bordered
+          :data-source="logs"
+          :columns="headers"
+          size="small"
+          :pagination="paginationSettings"
+          :rowKey="(record) => record._id"
+          :customRow="customRow"
+        >
+          <template v-slot:type="text">
+            <a-tag
+              :color="text === 'INFO' ? '' : text === 'WARN' ? 'orange' : 'red'"
+              >{{ text }}</a-tag
+            >
+          </template>
+          <template v-slot:id="text">
+            {{ text.substring(0, 5) }}
+          </template>
+        </a-table>
+      </a-col>
+    </a-row>
+    <a-row class="mt-1">
+      <a-card style="height: 60px" size="small">
+        <a-tag
+          :color="
+            selectedlogtype === 'INFO'
+              ? ''
+              : selectedlogtype === 'WARN'
+              ? 'orange'
+              : 'red'
+          "
+          >{{ selectedlog }}</a-tag
+        >
+      </a-card>
+    </a-row>
+  </div>
 </template>
 <script>
 // import { Log } from "../../backend";
@@ -55,16 +82,28 @@ export default {
       rangepickerval: [moment(new Date() - 24 * 60 * 60 * 1000), moment()],
       logTypeDfaultSelection: "WARN",
       logTypeOptions: ["INFO", "WARN", "ERROR"],
+      selectedlog: "",
+      selectedlogtype: "",
+      paginationSettings: {
+        size: "small",
+        pageSize: 7,
+      },
       headers: [
         {
-          text: "ID",
+          title: "ID",
           align: "start",
           sortable: false,
-          value: "_id",
+          dataIndex: "_id",
+          width: "70px",
+          scopedSlots: { customRender: "id" },
         },
-        { text: "Date", value: "timestamp" },
-        { text: "Type", value: "type" },
-        { text: "message", value: "message" },
+        { title: "Date", dataIndex: "timestamp" },
+        {
+          title: "Type",
+          dataIndex: "type",
+          scopedSlots: { customRender: "type" },
+        },
+        { title: "message", dataIndex: "message" },
       ],
       logs: [],
       // Values to be passed to backend
@@ -110,6 +149,19 @@ export default {
     },
     handleLogTypeSelectionChange(value) {
       this.logType = value.key;
+    },
+    handleLogSelection(val) {
+      console.log(val);
+    },
+    customRow(record) {
+      return {
+        on: {
+          click: () => {
+            this.selectedlog = record.message;
+            this.selectedlogtype = record.type;
+          },
+        },
+      };
     },
   },
 };

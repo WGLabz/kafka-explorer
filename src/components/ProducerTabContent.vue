@@ -40,7 +40,7 @@
       />
     </a-space>
     <br />
-    <a-space class="mt-4">
+    <a-space class="mt-4" style="flex-wrap: wrap; display: flex">
       <a-tag v-if="publishedMessages.length === 0" color="yellow">
         No message published yet.
       </a-tag>
@@ -48,6 +48,7 @@
         :color="isLatest(message.timestamp) ? 'green' : 'red'"
         v-for="(message, index) in publishedMessages"
         :key="index"
+        class="mb-2"
       >
         {{ formatMessage(message.message).value.substring(0, 10) }}
         <small style="color: blue">
@@ -105,7 +106,8 @@ export default {
             .filter((msg) => msg.type === "produce" && msg.topic === this.topic)
             .sort((a, b) => {
               return b.timestamp - a.timestamp;
-            });
+            })
+            .slice(0, 10);
           // console.log(this.publishedMessages);
         }
       });

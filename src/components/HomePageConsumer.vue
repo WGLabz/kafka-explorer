@@ -1,6 +1,6 @@
 <template>
   <!-- eslint-disable vue/no-deprecated-slot-attribute  -->
-  <a-card size="small" title="Consumed">
+  <a-card size="small" title="Consumed" style="height: 250px">
     <a-badge slot="extra" :color="consumerStatus"></a-badge>
     <a-input
       placeholder="Topic"
@@ -16,6 +16,7 @@
       icon="plus"
       size="small"
       type="primary"
+      @click="hndletopicaddition"
     />
     <p v-for="(data_, index) in data" :key="index">
       <a-tag>{{ data_.topic }}</a-tag>
@@ -48,7 +49,7 @@ export default {
             .sort((a, b) => {
               return b.timestamp - a.timestamp;
             })
-            .slice(0, 10);
+            .slice(0, 5);
           this.consumerStatus = "green";
         }
       });
@@ -68,6 +69,16 @@ export default {
       return moment().diff(moment(time), "minutes") < 5;
     },
     moment,
+    hndletopicaddition() {
+      window.ipcRenderer.send("kafka", {
+        command: "createtopic",
+        payload: {
+          name: this.topic,
+          type: "consume",
+          createincluseter: false,
+        },
+      });
+    },
   },
 };
 </script>

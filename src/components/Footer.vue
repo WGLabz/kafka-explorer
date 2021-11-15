@@ -26,8 +26,12 @@
             </template>
           </v-simple-table>
         </template>
-        <a-badge dot :status="clusterInfo.status ? 'success' : 'error'">
-          <span style="color: white; font-size: 10px">{{ controller }}</span>
+        <a-badge
+          dot
+          :status="clusterInfo.status ? 'success' : 'error'"
+          :text="controller"
+          style="font-color: white; font-size: 10px"
+        >
         </a-badge>
       </a-popover>
     </v-col>
@@ -57,3 +61,9 @@ export default {
   },
 };
 </script>
+<style lang="css">
+.ant-badge-status-text {
+  color: white !important;
+  font-size: 10px !important;
+}
+</style>

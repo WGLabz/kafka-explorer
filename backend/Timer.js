@@ -48,7 +48,7 @@ const init = () => {
     } catch (e) {
       log(`Error occured in timer!` + e, "ERROR");
     }
-  }, 15000);
+  }, 5000);
 };
 
 export { init };

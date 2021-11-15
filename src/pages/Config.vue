@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="mt-4">
     <a-row :gutter="16">
       <a-col :span="7">
         <a-input
@@ -53,14 +53,9 @@
           :columns="columns"
           height="600px"
           size="small"
+          :pagination="paginationSettings"
           :rowKey="(record) => record._id"
         >
-          <!-- <template v-slot:name="text, record">
-            <editable-cell
-              :text="text"
-              @change="onCellChange(record.key, 'name', $event)"
-            />
-          </template> -->
           <template v-slot:operation="text, record">
             <a-popconfirm
               v-if="record.isActive"
@@ -106,6 +101,10 @@ export default {
   components: { AddNewKafkaTopic },
   data() {
     return {
+      paginationSettings: {
+        size: "small",
+        pageSize: 6,
+      },
       addnewtopicmodalvisibility: false,
       server: "",
       username: "",
