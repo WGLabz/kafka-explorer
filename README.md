@@ -4,26 +4,28 @@
 
 ## APP Screenshots
 
-<table>
-    <tr>
-        <td>
+<table style="border: 0px;">
+    <tr style="border: 0px;">
+        <td style="border: 0px;">
             <img src=".assets/landing.png" width="250"/>
         </td>
-        <td>
+        <td style="border: 0px;">
             <img src=".assets/messages.png" width="250"/>
         </td>
     </tr>
-    <tr>
-        <td>
+    <tr style="border: 0px;">
+        <td style="border: 0px;">
             <img src=".assets/logs.png" width="250"/>
         </td>
-        <td>
+        <td style="border: 0px;">
             <img src=".assets/conf.png" width="250"/>
         </td>
     </tr>
 </table>
 
-## Useful Kafka Commands
+### Useful Kafka Commands
+
+>
 
 ```sh
 cd C:\kafka\zookeeper
