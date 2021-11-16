@@ -11,9 +11,9 @@
             <template v-slot:default>
               <thead>
                 <tr>
-                  <th class="text-left">Host</th>
-                  <th class="text-left">Port</th>
-                  <th class="text-left">Id</th>
+                  <th id="host" class="text-left">Host</th>
+                  <th id="port" class="text-left">Port</th>
+                  <th id="id" class="text-left">Id</th>
                 </tr>
               </thead>
               <tbody>
@@ -30,7 +30,7 @@
           dot
           :status="clusterInfo.status ? 'success' : 'error'"
           :text="controller"
-          style="font-color: white; font-size: 10px"
+          style="font-size: 10px"
         >
         </a-badge>
       </a-popover>
