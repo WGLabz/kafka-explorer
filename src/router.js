@@ -5,25 +5,34 @@ import Config from "./pages/Config";
 import Home from "./pages/Home";
 import Messages from "./pages/Messages";
 const routes = [
-  { path: "/", component: Home, icon: "mdi-home-minus-outline", bottom: false },
+  {
+    path: "/",
+    component: Home,
+    icon: "mdi-home-minus-outline",
+    bottom: false,
+    name: "Home",
+  },
 
   {
     path: "/messages",
     component: Messages,
     icon: "mdi-message-badge-outline",
+    name: "Messages",
     bottom: false,
   },
   {
     path: "/logs",
     component: Logs,
     icon: "mdi-text-box-search-outline",
-    bottom: true,
+    name: "Logs",
+    bottom: false,
   },
   {
     path: "/config",
     component: Config,
     icon: "mdi-cog-outline",
     bottom: true,
+    name: "Settings",
   },
 ];
 

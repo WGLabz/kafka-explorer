@@ -86,7 +86,7 @@ export default {
       selectedlogtype: "",
       paginationSettings: {
         size: "small",
-        pageSize: 7,
+        pageSize: 8,
       },
       headers: [
         {
