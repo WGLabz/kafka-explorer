@@ -1,9 +1,5 @@
 <template>
   <v-app>
-    <v-app-bar id="app-bar" app color="primary" height="40">
-      <div class="d-flex align-center"></div>
-      <v-spacer></v-spacer>
-    </v-app-bar>
     <Sidebar />
     <v-main class="mx-2 my-2" v-if="loaded === 1">
       <router-view></router-view>
