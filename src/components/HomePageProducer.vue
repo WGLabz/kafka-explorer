@@ -45,7 +45,7 @@
         v-for="pane in panes"
         :key="pane.key"
         :tab="pane.title"
-        :closable="pane.closable"
+        :closable="true"
       >
         <producer-tab-content :topic="pane.title" />
       </a-tab-pane>
@@ -58,28 +58,38 @@ import ProducerTabContent from "./ProducerTabContent.vue";
 export default {
   data() {
     return {
-      activeKey: 0,
+      activeKey: "1TAB",
       panes: [],
       newTabIndex: 0,
       topic: "",
       topics: [],
       addedPanes: [],
+      keyIndex: 0,
     };
   },
   methods: {
-    onEdit() {},
+    onEdit(targetKey, action) {
+      console.log(targetKey, action);
+      if (action === "remove") {
+        this.panes = this.panes.filter((pane) => pane.key !== targetKey);
+      }
+    },
     handletopicselection(val) {
       let paneName = val.key;
       // if(this.panes.find((item)=> item.title === val))
       if (this.addedPanes.indexOf(paneName) === -1) {
+        this.keyIndex = this.keyIndex + 1;
         this.addedPanes.push(paneName);
-        this.panes.push({ title: paneName });
+        this.panes.push({ title: paneName, key: `${this.keyIndex}TAB` });
+        this.activeKey = `${this.keyIndex}TAB`;
       }
     },
     hndletopicaddition() {
       if (this.addedPanes.indexOf(this.topic) === -1) {
+        this.keyIndex = this.keyIndex + 1;
         this.addedPanes.push(this.topic);
-        this.panes.push({ title: this.topic });
+        this.panes.push({ title: this.topic, key: `${this.keyIndex}TAB` });
+        this.activeKey = `${this.keyIndex}TAB`;
       }
       window.ipcRenderer.send("kafka", {
         command: "createtopic",
