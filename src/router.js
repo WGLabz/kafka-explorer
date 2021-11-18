@@ -4,6 +4,8 @@ import Logs from "./pages/Logs";
 import Config from "./pages/Config";
 import Home from "./pages/Home";
 import Messages from "./pages/Messages";
+import Topics from "./pages/Topics";
+
 const routes = [
   {
     path: "/",
@@ -25,6 +27,13 @@ const routes = [
     component: Logs,
     icon: "mdi-text-box-search-outline",
     name: "Logs",
+    bottom: false,
+  },
+  {
+    path: "/topics",
+    component: Topics,
+    icon: "mdi-text-box-search-outline",
+    name: "Topics",
     bottom: false,
   },
   {
