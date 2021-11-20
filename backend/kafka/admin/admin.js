@@ -10,4 +10,18 @@ const closeAdmin = async () => {
   return await global.admin.disconnect();
 };
 
-export { initAdmin, getClusterInfo, closeAdmin };
+const getTopicsMeta = async () => {
+  return await global.admin.fetchTopicMetadata();
+};
+
+const deleteTopicFromCluster = async (topic) => {
+  return await global.admin.deleteTopics({ topics: [topic] });
+};
+
+export {
+  initAdmin,
+  getClusterInfo,
+  closeAdmin,
+  getTopicsMeta,
+  deleteTopicFromCluster,
+};

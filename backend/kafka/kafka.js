@@ -8,7 +8,7 @@ const kafkaInit = () => {
     setTimeout(() => {
       if (global.kafka === null) reject(new Error("Failed to connect!"));
       else resolve("Connected!");
-    }, 28000);
+    }, 15000);
     global.kafka = new Kafka({
       clientId: "a-random-client-id",
       brokers: async () => {

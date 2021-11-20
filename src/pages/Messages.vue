@@ -1,6 +1,6 @@
 <template>
   <!-- eslint-disable vue/no-v-model-argument  -->
-  <div class="mt-4">
+  <div>
     <a-row type="flex" justify="start" class="mb-4">
       <a-col :span="24">
         <a-range-picker
@@ -11,20 +11,22 @@
           v-model:vlue="rangepickerval"
           @ok="onOk"
         />
-        <a-button
-          class="mr-3"
-          icon="search"
-          @click="getMessages"
-          type="primary"
-        >
+        <a-button class="" icon="search" @click="getMessages" type="primary">
+          Search
         </a-button>
-        <a-switch @change="refreshstatusbuttontoggled" class="float-right">
+        <a-switch
+          @change="refreshstatusbuttontoggled"
+          class="float-right my-2 mr-0"
+          size="small"
+          style="transform: rotate(90deg)"
+        >
           <!-- eslint-disable-next-line vue/no-deprecated-slot-attribute -->
           <a-icon slot="checkedChildren" type="reload" />
           <!-- eslint-disable-next-line vue/no-deprecated-slot-attribute -->
           <a-icon slot="unCheckedChildren" type="close" />
         </a-switch>
-        <a-button class="mr-3 float-right" icon="reload" @click="reset">
+        <a-button class="float-right" icon="reload" @click="reset">
+          Refresh
         </a-button>
       </a-col>
     </a-row>
@@ -61,6 +63,7 @@ export default {
       paginationSettings: {
         size: "small",
         pageSize: 6,
+        position: "top",
       },
       columns: [
         {

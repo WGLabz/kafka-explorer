@@ -1,6 +1,6 @@
 <template>
   <!-- eslint-disable vue/no-v-model-argument  -->
-  <div class="mt-4">
+  <div>
     <a-row type="flex" justify="start" class="mb-5">
       <a-col :span="24">
         <a-select
@@ -27,8 +27,10 @@
           @ok="onOk"
         />
         <a-button class="mr-3" icon="search" @click="load" type="primary">
+          Search
         </a-button>
         <a-button @click="refresh" class="float-right" icon="reload">
+          Refresh
         </a-button>
       </a-col>
     </a-row>
@@ -87,6 +89,7 @@ export default {
       paginationSettings: {
         size: "small",
         pageSize: 7,
+        position: "top",
       },
       headers: [
         {

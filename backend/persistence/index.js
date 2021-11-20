@@ -63,6 +63,20 @@ const config = {
 
 // Kafka related methods
 const kafka = {
+  removeTopicByName: async (name) => {
+    const topic_ = await db.topics.find({
+      $and: [
+        {
+          name: name,
+        },
+      ],
+    });
+    if (topic_.length !== 0) {
+      await db.topics.remove({ _id: topic_._id });
+    } else {
+      return Promise.resolve("true");
+    }
+  },
   removeTopic: async (id) => {
     return await db.topics.remove({ _id: id });
   },
