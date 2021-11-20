@@ -1,38 +1,69 @@
 <template>
-  <div class="mt-4">
-    <a-row :gutter="16">
-      <a-col :span="7">
-        <a-input
-          placeholder="Bootstrap Server(s)"
-          allow-clear
-          size="small"
-          v-model="server"
-        />
+  <!-- eslint-disable vue/no-deprecated-slot-attribute -->
+  <div>
+    <a-row type="flex" :gutter="[8, 8]">
+      <a-col :span="6" :order="1">
+        <a-card title="Cluster Config" size="small">
+          <a-space direction="vertical">
+            <a-input
+              placeholder="Bootstrap Server(s)"
+              allow-clear
+              size="small"
+              v-model="server"
+            />
+            <a-input
+              placeholder="Username"
+              allow-clear
+              v-model="username"
+              size="small"
+            />
+            <a-input
+              placeholder="Password"
+              allow-clear
+              v-model="password"
+              size="small"
+            />
+          </a-space>
+
+          <a-button
+            type="primary"
+            @click="saveServerInfo"
+            size="small"
+            slot="extra"
+            icon="check"
+          >
+          </a-button>
+        </a-card>
       </a-col>
-      <a-col :span="5">
-        <a-input
-          placeholder="Username"
-          allow-clear
-          v-model="username"
-          size="small"
-        />
+      <a-col :span="6" :order="2">
+        <a-card title="Topic Config" size="small">
+          <a-space direction="vertical">
+            <a-input
+              placeholder="Consumer Group"
+              allow-clear
+              size="small"
+              v-model="consumergrp"
+            />
+          </a-space>
+
+          <a-button
+            slot="extra"
+            type="primary"
+            @click="saveServerInfo"
+            size="small"
+            icon="check"
+          >
+          </a-button>
+        </a-card>
       </a-col>
-      <a-col :span="5">
-        <a-input
-          placeholder="Password"
-          allow-clear
-          v-model="password"
-          size="small"
-        />
-      </a-col>
-      <a-col :span="5">
-        <a-button type="primary" @click="saveServerInfo" size="small">
-          <a-icon type="check" style="color: white" />
-        </a-button>
-      </a-col>
+    </a-row>
+    <a-row type="flex">
+      <a-col :span="12" :order="4"></a-col>
+      <a-col :span="12" :order="3"></a-col>
     </a-row>
   </div>
 </template>
+
 <script>
 import moment from "moment";
 export default {

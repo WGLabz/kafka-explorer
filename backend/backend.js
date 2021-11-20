@@ -11,7 +11,12 @@ import { config, kafka } from "./persistence";
 import { ipcMain } from "electron";
 import { sendUserMessage } from "./messaging";
 import { init as RunTimer } from "./timer";
-import { closeAdmin, initAdmin } from "./kafka/admin/admin";
+import {
+  closeAdmin,
+  initAdmin,
+  getTopicsMeta,
+  deleteTopicFromCluster,
+} from "./kafka/admin/admin";
 import { kafkaInit } from "./kafka/kafka";
 
 const reconnectKafka = () => {
@@ -31,12 +36,10 @@ const reconnectKafka = () => {
         ConsumerInit();
         ProducerInit();
         initAdmin();
-        console.log("Kafka Initialized");
       })
       .catch((err) => {
         console.log("Kafka", err);
       });
-
     sendUserMessage("INFO", `Reconnected!`);
   } catch (e) {
     sendUserMessage("ERROR", `Failed to reconnect!`);
@@ -55,6 +58,7 @@ ipcMain.on("logGet", (event, arg) => {
 
 ipcMain.on("kafka", (event, arg) => {
   var command = arg.command;
+
   switch (command) {
     case "init":
       kafkaInit()
@@ -62,12 +66,9 @@ ipcMain.on("kafka", (event, arg) => {
           ConsumerInit();
           ProducerInit();
           RunTimer();
-          console.log("Kafka Initialized");
-
           event.reply("userMessage", { type: "load", value: true });
         })
-        .catch((err) => {
-          console.log("Kafka", err);
+        .catch(() => {
           event.reply("userMessage", { type: "load", value: false });
         });
       break;
@@ -77,6 +78,7 @@ ipcMain.on("kafka", (event, arg) => {
       ProducerClose();
       closeAdmin();
       break;
+
     case "message":
       var payload = arg.payload;
       SendMessage(payload.topic, payload.key, payload.value, payload.partition)
@@ -118,6 +120,7 @@ ipcMain.on("kafka", (event, arg) => {
       }
       reconnectKafka();
       break;
+
     case "gettopics":
       kafka.getTopics().then((topics) => {
         event.reply("kafkaResponse", { topics: topics, type: "topics" });
@@ -159,6 +162,7 @@ ipcMain.on("kafka", (event, arg) => {
         });
       reconnectKafka();
       break;
+
     case "getmessages":
       kafka
         .getMessages(arg)
@@ -169,6 +173,35 @@ ipcMain.on("kafka", (event, arg) => {
           sendUserMessage("ERROR", "Failed loading kafka messages");
         });
       break;
+
+    case "gettopicsmeta":
+      getTopicsMeta()
+        .then((res) => {
+          event.reply("kafkaResponse", { type: "meta", meta: res });
+        })
+        .catch(() => {
+          sendUserMessage("ERROR", "Failed loading topics from cluster.");
+        });
+      return;
+    case "removetopicfromcluster":
+      // deleteTopicFromCluster(arg.topic)
+      //   .then(() => {
+      //     sendUserMessage(
+      //       "INFO",
+      //       "Topic removed from the cluster successfully."
+      //     );
+      //   })
+      //   .catch(() => {
+      //     sendUserMessage(
+      //       "ERROR",
+      //       "Failed to delete topic. Check if cluster allows it."
+      //     );
+      //   });
+      sendUserMessage("INFO", "Feature coming soon.. Topic will be removed from DB if exists!");
+      kafka.removeTopicByName(arg.topic).catch(() => {
+        sendUserMessage("ERROR", "Failed to remove topic from the DB.");
+      });
+      return;
   }
 });
 

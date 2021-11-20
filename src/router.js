@@ -13,6 +13,7 @@ const routes = [
     icon: "mdi-home-minus-outline",
     bottom: false,
     name: "Home",
+    meta: { displayName: '' }
   },
 
   {
@@ -21,6 +22,7 @@ const routes = [
     icon: "mdi-message-badge-outline",
     name: "Messages",
     bottom: false,
+    meta: { displayName: 'Messages' }
   },
   {
     path: "/logs",
@@ -28,6 +30,7 @@ const routes = [
     icon: "mdi-text-box-search-outline",
     name: "Logs",
     bottom: false,
+    meta: { displayName: 'Application Logs' }
   },
   {
     path: "/topics",
@@ -35,6 +38,7 @@ const routes = [
     icon: "mdi-text-box-search-outline",
     name: "Topics",
     bottom: false,
+    meta: { displayName: 'Configured Topics' }
   },
   {
     path: "/config",
@@ -42,6 +46,7 @@ const routes = [
     icon: "mdi-cog-outline",
     bottom: true,
     name: "Settings",
+    meta: { displayName: 'Application Configuration' }
   },
 ];
 

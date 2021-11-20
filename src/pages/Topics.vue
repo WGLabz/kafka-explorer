@@ -1,21 +1,30 @@
 <template>
-  <div class="mt-4">
-    <a-row :gutter="16">
+  <div>
+    <a-row>
+      <a-col span="12">
+        <a-space size="small">
+          <a-button type="primary" @click="handleAdd" icon="plus">
+            Add
+          </a-button>
+          <a-button @click="handleClusterTopicModal" type="primary">
+            Topics in Cluster
+          </a-button>
+        </a-space>
+      </a-col>
       <a-col>
         <a-button
-          class="editable-add-btn mt-5 mb-5"
-          @click="handleAdd"
-          icon="plus"
-          size="small"
-        >
-        </a-button>
-        <a-button
-          class="editable-add-btn mt-5 mb-5 ml-2"
+          class="float-right"
           icon="reload"
           @click="getTopics"
-          size="small"
+          type="secondary"
         >
+          Refresh
         </a-button>
+      </a-col>
+    </a-row>
+
+    <a-row class="pt-0 mt-0">
+      <a-col>
         <a-table
           bordered
           :data-source="kafkatopics"
@@ -61,19 +70,32 @@
     >
       <add-new-kafka-topic />
     </a-modal>
+    <a-modal
+      v-model="clustertopicsmodalvisibility"
+      title="Topics Available in Cluster"
+      @ok="getTopics"
+      :width="700"
+      centered
+      @cancel="getTopics"
+    >
+      <cluster-topics />
+    </a-modal>
   </div>
 </template>
 <script>
 import moment from "moment";
 import AddNewKafkaTopic from "../components/AddNewKafkaTopic";
+import ClusterTopics from "../components/ClusterTopics.vue";
 export default {
-  components: { AddNewKafkaTopic },
+  components: { AddNewKafkaTopic, ClusterTopics },
   data() {
     return {
       paginationSettings: {
         size: "small",
-        pageSize: 6,
+        pageSize: 7,
+        position: "top",
       },
+      clustertopicsmodalvisibility: false,
       addnewtopicmodalvisibility: false,
       kafkatopics: [],
       columns: [
@@ -126,6 +148,7 @@ export default {
         {
           title: "",
           dataIndex: "operation",
+          align: "center",
           scopedSlots: { customRender: "operation" },
         },
       ],
@@ -143,6 +166,9 @@ export default {
   methods: {
     handleAdd() {
       this.addnewtopicmodalvisibility = true;
+    },
+    handleClusterTopicModal() {
+      this.clustertopicsmodalvisibility = true;
     },
     onCellChange(key, dataIndex, value) {
       const dataSource = [...this.dataSource];
@@ -179,6 +205,7 @@ export default {
         command: "gettopics",
       });
       this.addnewtopicmodalvisibility = false;
+      this.clustertopicsmodalvisibility = false;
     },
     moment,
   },

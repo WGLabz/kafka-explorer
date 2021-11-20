@@ -93,6 +93,11 @@ export default {
     },
     hndletopicaddition() {
       if (this.addedPanes.indexOf(this.topic) === -1) {
+        if (this.topic === "") {
+          this.$message.error("Topic name can't be empty", 4);
+          return;
+        }
+
         this.keyIndex = this.keyIndex + 1;
         this.addedPanes.push(this.topic);
         this.panes.push({ title: this.topic, key: `${this.keyIndex}TAB` });

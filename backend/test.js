@@ -55,8 +55,36 @@
 //     console.log(res);
 //   });
 
-import { kafka } from "./persistence";
+// import { kafka } from "./persistence";
 
-kafka.addTopic("test329ddd43dd", "consume").then((res) => {
-  console.log(res);
+// kafka.addTopic("test329ddd43dd", "consume").then((res) => {
+//   console.log(res);
+// });
+
+const { ConfigResourceTypes } = require("kafkajs");
+
+import { kafkaInit } from "./kafka/kafka";
+//Start again
+kafkaInit().then(async () => {
+  let admin = global.kafka.admin();
+  await admin.connect();
+  const offsets = await admin.fetchTopicOffsets();
+  console.log(JSON.stringify(topicMeta));
+  console.log(JSON.stringify(offsets));
+  // const meta = await admin.fetchTopicMetadata({ topics: ["test"] });
+  // console.log(meta);
+  // const cluseter = await admin.describeCluster();
+  // console.log(cluseter);
+
+  // const res = await admin.describeConfigs({
+  //   includeSynonyms: false,
+  //   resources: [
+  //     {
+  //       type: ConfigResourceTypes.BROKER,
+  //       name: "LAPTOP-0PDKQV5Q",
+  //     },
+  //   ],
+  // });
+  // const res = await admin.describeGroups(["KAFKA_EXPLORER"]); // await admin.listGroups();
+  // console.log(res);
 });

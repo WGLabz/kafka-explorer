@@ -1,7 +1,31 @@
 <template>
   <v-app>
+    <v-app-bar
+      id="app-bar"
+      absolute
+      app
+      height="30px"
+      flat
+      color="#fefeff"
+      extension-height="30"
+      v-if="notHome"
+    >
+      <v-toolbar-title
+        style="font-family: Roboto; font-weight: bold; font-size: 16px"
+        class="mt-4"
+      >
+        {{ pagename }}
+      </v-toolbar-title>
+      <template v-slot:extension>
+        <v-divider></v-divider>
+      </template>
+    </v-app-bar>
     <Sidebar />
-    <v-main class="mx-2 my-2" v-if="loaded === 1">
+    <v-main
+      class="mx-4 mt-1"
+      v-if="loaded === 1"
+      style="background-color: #fefeff"
+    >
       <router-view></router-view>
     </v-main>
     <v-main class="mx-2 my-2" v-else-if="loaded === 0">
@@ -28,11 +52,14 @@
 <script>
 import NewFooter from "./components/Footer.vue";
 import Sidebar from "./components/Sidebar.vue";
+
 export default {
   name: "App",
   data() {
     return {
       loaded: 0,
+      pagename: "",
+      notHome: false,
     };
   },
   components: {
@@ -47,7 +74,7 @@ export default {
       window.ipcRenderer.receive("userMessage", (args) => {
         switch (args.type) {
           case "ERROR":
-            this.$message.error(args.message, 4);
+            this.$message.error(args.message, 8);
             break;
           case "WARN":
             this.$message.warning(args.message, 4);
@@ -63,7 +90,11 @@ export default {
     });
     setTimeout(() => {
       this.loaded = this.loaded === 1 ? 1 : -1;
-    }, 70000);
+    }, 30000);
+  },
+  updated() {
+    this.pagename = this.$route.meta.displayName;
+    this.notHome = this.$route.meta.displayName !== "";
   },
 };
 </script>
