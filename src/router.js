@@ -13,7 +13,7 @@ const routes = [
     icon: "mdi-home-minus-outline",
     bottom: false,
     name: "Home",
-    meta: { displayName: '' }
+    meta: { displayName: "" },
   },
 
   {
@@ -22,15 +22,7 @@ const routes = [
     icon: "mdi-message-badge-outline",
     name: "Messages",
     bottom: false,
-    meta: { displayName: 'Messages' }
-  },
-  {
-    path: "/logs",
-    component: Logs,
-    icon: "mdi-text-box-search-outline",
-    name: "Logs",
-    bottom: false,
-    meta: { displayName: 'Application Logs' }
+    meta: { displayName: "Messages" },
   },
   {
     path: "/topics",
@@ -38,7 +30,15 @@ const routes = [
     icon: "mdi-text-box-search-outline",
     name: "Topics",
     bottom: false,
-    meta: { displayName: 'Configured Topics' }
+    meta: { displayName: "Configured Topics" },
+  },
+  {
+    path: "/logs",
+    component: Logs,
+    icon: "mdi-text-box-outline",
+    name: "Logs",
+    bottom: false,
+    meta: { displayName: "Application Logs" },
   },
   {
     path: "/config",
@@ -46,7 +46,7 @@ const routes = [
     icon: "mdi-cog-outline",
     bottom: true,
     name: "Settings",
-    meta: { displayName: 'Application Configuration' }
+    meta: { displayName: "Application Configuration" },
   },
 ];
 

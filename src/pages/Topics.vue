@@ -41,7 +41,7 @@
               @confirm="() => onDisable(record._id)"
               style="margin: 5px"
             >
-              <a-button style="color: yellow" icon="stop" size="small" />
+              <a-button type="warning" icon="stop" size="small" />
             </a-popconfirm>
             <a-popconfirm
               v-else
@@ -49,14 +49,14 @@
               @confirm="() => onEnable(record._id)"
               style="margin: 5px"
             >
-              <a-button style="color: green" size="small" icon="caret-right" />
+              <a-button type="success" size="small" icon="caret-right" />
             </a-popconfirm>
             <a-popconfirm
               v-if="kafkatopics.length"
               title="Sure to delete?"
               @confirm="() => onDelete(record._id)"
             >
-              <a-button style="color: red" size="small" icon="delete" />
+              <a-button type="danger" size="small" icon="delete" />
             </a-popconfirm>
           </template>
         </a-table>
