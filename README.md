@@ -1,31 +1,31 @@
-# kafka-explorer
+<h1 style="border-bottom: none">
+    <b>
+        Kafka Explorer<br>
+    </b>
+    An opens-ource tool to test kafka consumers and producers
+    <br>
+</h1>
 
 [![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=WGLabz_kafka-explorer&metric=code_smells)](https://sonarcloud.io/summary/new_code?id=WGLabz_kafka-explorer) [![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=WGLabz_kafka-explorer&metric=sqale_rating)](https://sonarcloud.io/summary/new_code?id=WGLabz_kafka-explorer) [![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=WGLabz_kafka-explorer&metric=vulnerabilities)](https://sonarcloud.io/summary/new_code?id=WGLabz_kafka-explorer) [![Bugs](https://sonarcloud.io/api/project_badges/measure?project=WGLabz_kafka-explorer&metric=bugs)](https://sonarcloud.io/summary/new_code?id=WGLabz_kafka-explorer)
 
-## APP Screenshots
 
-<table style="border: 0px;">
-    <tr style="border: 0px;">
-        <td style="border: 0px;">
-            <img src=".assets/landing.png" width="250"/>
-        </td>
-        <td style="border: 0px;">
-            <img src=".assets/messages.png" width="250"/>
-        </td>
-    </tr>
-    <tr style="border: 0px;">
-        <td style="border: 0px;">
-            <img src=".assets/logs.png" width="250"/>
-        </td>
-        <td style="border: 0px;">
-            <img src=".assets/conf.png" width="250"/>
-        </td>
-    </tr>
-</table>
+<p align="center"><img src=".assets/image.png" alt="Kafka Explorer" width="1000px" /></p>
+
+## Built With
+
+
+* VueJS
+* Electron
+* KafkaJS
+* NeDB Promise
+* Vuetify
+* Antd Vue
+
+## License
+
+Distributed under the AGPLv3 License. See `LICENSE.md` for more information.
 
 ### Useful Kafka Commands
-
->
 
 ```sh
 cd C:\kafka\zookeeper
