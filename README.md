@@ -1,31 +1,38 @@
 <h1 style="border-bottom: none">
     <b>
-        Kafka Explorer<br>
+        Kafka Explorer
     </b>
-    An opens-ource tool to test kafka consumers and producers
+    <h4>An open-source tool to test kafka consumers and producers</h4>
     <br>
 </h1>
 
 [![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=WGLabz_kafka-explorer&metric=code_smells)](https://sonarcloud.io/summary/new_code?id=WGLabz_kafka-explorer) [![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=WGLabz_kafka-explorer&metric=sqale_rating)](https://sonarcloud.io/summary/new_code?id=WGLabz_kafka-explorer) [![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=WGLabz_kafka-explorer&metric=vulnerabilities)](https://sonarcloud.io/summary/new_code?id=WGLabz_kafka-explorer) [![Bugs](https://sonarcloud.io/api/project_badges/measure?project=WGLabz_kafka-explorer&metric=bugs)](https://sonarcloud.io/summary/new_code?id=WGLabz_kafka-explorer)
 
-
+<br/>
 <p align="center"><img src=".assets/image.png" alt="Kafka Explorer" width="1000px" /></p>
+<br/>
+
 
 ## Built With
 
+- VueJS
+- Electron
+- KafkaJS
+- NeDB Promise
+- Vuetify
+- Antd Vue
 
-* VueJS
-* Electron
-* KafkaJS
-* NeDB Promise
-* Vuetify
-* Antd Vue
+
+<br/>
 
 ## License
 
 Distributed under the AGPLv3 License. See `LICENSE.md` for more information.
 
+<br/>
+
 ### Useful Kafka Commands
+<br/>
 
 ```sh
 cd C:\kafka\zookeeper
