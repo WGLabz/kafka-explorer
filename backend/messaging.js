@@ -32,10 +32,16 @@ const sendKafkaTopics = (data) => {
     content.send("kafkatopics", data_);
   });
 };
+const sendLogs = (data) => {
+  webContents.getAllWebContents().map((content) => {
+    content.send("autologs", data);
+  });
+};
 
 export {
   sendUserMessage,
   sendCluseterDetails,
   sendKafkaMessages,
   sendKafkaTopics,
+  sendLogs,
 };
