@@ -77,6 +77,7 @@
       :width="700"
       centered
       @cancel="getTopics"
+      :footer="false"
     >
       <cluster-topics />
     </a-modal>

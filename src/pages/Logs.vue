@@ -153,9 +153,6 @@ export default {
     handleLogTypeSelectionChange(value) {
       this.logType = value.key;
     },
-    handleLogSelection(val) {
-      console.log(val);
-    },
     customRow(record) {
       return {
         on: {

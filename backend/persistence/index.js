@@ -139,7 +139,7 @@ const kafka = {
           isActive: true,
         });
       } else {
-        console.log("Exist");
+        // console.log("Exist");
         // console.log("Topic already exists!");
         return Promise.resolve("false");
       }
@@ -199,6 +199,19 @@ const logs = {
           },
         ];
         break;
+      default:
+        filter.$or = [
+          {
+            type: "INFO",
+          },
+          {
+            type: "WARN",
+          },
+          {
+            type: "ERROR",
+          },
+        ];
+        break;
     }
     const docs = await db.log
       .find({
@@ -214,6 +227,9 @@ const logs = {
       })
       .sort({ timestamp: -1 });
     return docs;
+  },
+  getLatestLogs: async (limit) => {
+    return await db.log.find().sort({ timestamp: -1 }).limit(limit);
   },
 };
 export { log, logs, kafka, config };

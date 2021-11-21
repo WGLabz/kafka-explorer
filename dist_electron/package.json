@@ -16,6 +16,7 @@
   "main": "background.js",
   "dependencies": {
     "@ant-design/icons": "^4.7.0",
+    "@vue/composition-api": "^1.4.0",
     "ant-design-vue": "^1.7.8",
     "core-js": "^3.6.5",
     "kafkajs": "^1.15.0",
@@ -24,7 +25,9 @@
     "moment": "^2.29.1",
     "nedb-promises": "^5.0.1",
     "vue": "^2.6.11",
+    "vue-json-viewer": "^2.2.20",
     "vue-router": "^3.5.3",
+    "vue-xml-viewer": "^0.1.4",
     "vuetify": "^2.4.0",
     "vuex": "^3.6.2"
   },

@@ -1,31 +1,39 @@
-# kafka-explorer
+<h1  align="center" style="border-bottom: none">
+    <b>
+        Kafka Explorer
+    </b>
+</h1>
+    <h4 align="center">An open-source tool to test Kafka consumers and producers</h4>
+<br/>
+<p align="center">
+<img src="https://sonarcloud.io/api/project_badges/measure?project=WGLabz_kafka-explorer&metric=code_smells" />
+<img src="https://sonarcloud.io/api/project_badges/measure?project=WGLabz_kafka-explorer&metric=sqale_rating" />
+<img src="https://sonarcloud.io/api/project_badges/measure?project=WGLabz_kafka-explorer&metric=bugs" />
+</p>
+<br/>
+<p align="center"><img src=".assets/image.png" alt="Kafka Explorer" width="1000px" /></p>
+<br/>
 
-[![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=WGLabz_kafka-explorer&metric=code_smells)](https://sonarcloud.io/summary/new_code?id=WGLabz_kafka-explorer) [![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=WGLabz_kafka-explorer&metric=sqale_rating)](https://sonarcloud.io/summary/new_code?id=WGLabz_kafka-explorer) [![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=WGLabz_kafka-explorer&metric=vulnerabilities)](https://sonarcloud.io/summary/new_code?id=WGLabz_kafka-explorer) [![Bugs](https://sonarcloud.io/api/project_badges/measure?project=WGLabz_kafka-explorer&metric=bugs)](https://sonarcloud.io/summary/new_code?id=WGLabz_kafka-explorer)
+## Built Using
 
-## APP Screenshots
+- [VueJS](https://vuejs.org/)
+- [Electron](https://www.electronjs.org/)
+- [KafkaJS](https://kafka.js.org/)
+- [NeDB Promise](https://github.com/bajankristof/nedb-promises)
+- [Vuetify](https://vuetifyjs.com/en/)
+- [Antd Vue](https://www.antdv.com/docs/vue/introduce/)
 
-<table style="border: 0px;">
-    <tr style="border: 0px;">
-        <td style="border: 0px;">
-            <img src=".assets/landing.png" width="250"/>
-        </td>
-        <td style="border: 0px;">
-            <img src=".assets/messages.png" width="250"/>
-        </td>
-    </tr>
-    <tr style="border: 0px;">
-        <td style="border: 0px;">
-            <img src=".assets/logs.png" width="250"/>
-        </td>
-        <td style="border: 0px;">
-            <img src=".assets/conf.png" width="250"/>
-        </td>
-    </tr>
-</table>
+<br/>
+
+## License
+
+Distributed under the AGPLv3 License. See `LICENSE.md` for more information.
+
+<br/>
 
 ### Useful Kafka Commands
 
->
+<br/>
 
 ```sh
 cd C:\kafka\zookeeper
