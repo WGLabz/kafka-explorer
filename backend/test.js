@@ -69,8 +69,8 @@ kafkaInit().then(async () => {
   let admin = global.kafka.admin();
   await admin.connect();
   const offsets = await admin.fetchTopicOffsets();
-  console.log(JSON.stringify(topicMeta));
-  console.log(JSON.stringify(offsets));
+  //console.log(JSON.stringify(topicMeta));
+  // console.log(JSON.stringify(offsets));
   // const meta = await admin.fetchTopicMetadata({ topics: ["test"] });
   // console.log(meta);
   // const cluseter = await admin.describeCluster();

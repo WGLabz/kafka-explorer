@@ -76,8 +76,8 @@ export default {
     };
   },
   methods: {
-    handlemessagechange(val) {
-      this.addButtonStatus = !(val.data && val.data !== "");
+    handlemessagechange() {
+      this.addButtonStatus = !(this.message && this.message !== "");
     },
     sendMessage() {
       window.ipcRenderer.send("kafka", {
