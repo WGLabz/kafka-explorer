@@ -197,7 +197,10 @@ ipcMain.on("kafka", (event, arg) => {
       //       "Failed to delete topic. Check if cluster allows it."
       //     );
       //   });
-      sendUserMessage("INFO", "Feature coming soon.. Topic will be removed from DB if exists!");
+      sendUserMessage(
+        "INFO",
+        "Feature coming soon.. Topic will be removed from DB if exists!"
+      );
       kafka.removeTopicByName(arg.topic).catch(() => {
         sendUserMessage("ERROR", "Failed to remove topic from the DB.");
       });
@@ -214,6 +217,7 @@ ipcMain.on("conf", async (event, arg) => {
       server: await config.readConfig("KAFKA_BOOTSTRAP_SERVER"),
       username: await config.readConfig("KAFKA_USERNAME"),
       password: await config.readConfig("KAFKA_PASSWORD"),
+      consumergrp: await config.readConfig("KAFKA_CONSUMER_GROUP"),
     });
   }
   if (command === "SET") {
@@ -232,6 +236,15 @@ ipcMain.on("conf", async (event, arg) => {
     ConsumerClose();
     ProducerClose();
     closeAdmin();
+  }
+  if (command === "SET_CONS_GRP") {
+    try {
+      await config.updateConfig("KAFKA_CONSUMER_GROUP", arg.val);
+      reconnectKafka();
+      sendUserMessage("INFO", `Default consumer group updated sucessfully!`);
+    } catch (e) {
+      sendUserMessage("ERROR", `Default consumer group update failed!`);
+    }
   }
 
   if (command === "START") {
