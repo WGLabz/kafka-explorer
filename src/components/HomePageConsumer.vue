@@ -31,7 +31,7 @@
             @click="messageselected(data_)"
             style="cursor: pointer"
           >
-            {{ formatMessage(data_.message).value.substring(0, 18) }}
+            {{ formatMessage(data_.message).value.substring(0, 20) }}
             <small style="color: brown">
               {{ moment(data_.timestamp).format("HH:mm:ss") }}
             </small>
