@@ -1,6 +1,6 @@
 <template>
   <!-- eslint-disable vue/no-deprecated-slot-attribute  -->
-  <a-card size="small" title="Produce Message" style="height: 250px">
+  <a-card size="small" title="Produce Message" style="height: 230px">
     <a-input
       placeholder="Topic"
       allow-clear
@@ -69,12 +69,12 @@ export default {
   },
   methods: {
     onEdit(targetKey, action) {
-      console.log(targetKey, action);
+      // console.log(targetKey, action);
       if (action === "remove") {
         let toRemovePanName = this.panes.find(
           (pane) => pane.key === targetKey
         ).title;
-        console.log(toRemovePanName);
+        // console.log(toRemovePanName);
         this.panes = this.panes.filter((pane) => pane.key !== targetKey);
         this.addedPanes = this.addedPanes.filter(
           (paneName) => paneName !== toRemovePanName

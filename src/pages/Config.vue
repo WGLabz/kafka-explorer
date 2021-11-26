@@ -49,7 +49,7 @@
           <a-button
             slot="extra"
             type="primary"
-            @click="saveServerInfo"
+            @click="saveconsumergrp"
             size="small"
             icon="check"
           >
@@ -72,6 +72,7 @@ export default {
       server: "",
       username: "",
       password: "",
+      consumergrp: "",
     };
   },
 
@@ -90,6 +91,12 @@ export default {
         password: this.password || "",
       });
     },
+    saveconsumergrp() {
+      window.ipcRenderer.send("conf", {
+        command: "SET_CONS_GRP",
+        val: this.consumergrp,
+      });
+    },
   },
   mounted() {
     this.$nextTick(function () {
@@ -99,6 +106,7 @@ export default {
           this.server = args.server;
           this.username = args.username;
           this.password = args.password;
+          this.consumergrp = args.consgrp
         }
       });
     });

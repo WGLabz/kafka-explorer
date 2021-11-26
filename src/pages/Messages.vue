@@ -39,15 +39,51 @@
           size="small"
           :rowKey="(record) => record._id"
           :pagination="paginationSettings"
+          :customRow="customRow"
         >
+          <template v-slot:message="record">
+            <a-tooltip placement="topLeft">
+              <template v-slot:title>
+                <span>Click to explore!</span>
+              </template>
+              <small
+                v-on:click="messageselected(record)"
+                style="cursor: pointer"
+              >
+                <a-icon type="message" class="px-1" />
+                {{ JSON.parse(record).value.substring(0, 60) }} <br />
+                <a-icon type="key" class="px-1" />
+                {{ JSON.parse(record).key || "NO_KEY" }}
+              </small>
+            </a-tooltip>
+          </template>
         </a-table>
       </a-col>
     </a-row>
+    <a-modal
+      size="small"
+      v-model="messagedetailsmodal"
+      @ok="messagedetailsmodalclosed"
+      :footer="false"
+    >
+      <template v-slot:title
+        >{{ messagemodaltitle }}
+        <a-tag>
+          <small>
+            {{ moment(selectedMessage.timestamp).format("DD/MM/yyyy HH:mm") }}
+          </small>
+        </a-tag>
+      </template>
+      <message-viewer :data="selectedMessage"></message-viewer>
+    </a-modal>
   </div>
 </template>
 <script>
 import moment from "moment";
+import MessageViewer from "../components/MessageViewer.vue";
+
 export default {
+  components: { MessageViewer },
   data() {
     return {
       refreshstatus: false,
@@ -65,6 +101,9 @@ export default {
         pageSize: 6,
         position: "top",
       },
+      messagedetailsmodal: false,
+      selectedMessage: {},
+      messagemodaltitle: "",
       columns: [
         {
           title: "Time",
@@ -95,17 +134,7 @@ export default {
         {
           title: "Message",
           dataIndex: "message",
-          customRender: (msg) => {
-            let msg_ = JSON.parse(msg);
-            return (
-              <small>
-                <a-icon type="message" class="px-1" />
-                {msg_.value} <br />
-                <a-icon type="key" class="px-1" />
-                {msg_.key}
-              </small>
-            );
-          },
+          scopedSlots: { customRender: "message" },
         },
         {
           title: "Partition",
@@ -142,17 +171,17 @@ export default {
         }
         this.kafkamessages = args;
       });
-      // setInterval(
-      //   function () {
-      //     if (this.refreshstatus) {
-      //       this.getMessages();
-      //     }
-      //   }.bind(this),
-      //   15000
-      // );
     });
   },
   methods: {
+    messagedetailsmodalclosed() {
+      this.messagedetailsmodal = false;
+    },
+    messageselected() {
+      this.messagedetailsmodal = true;
+      this.messagemodaltitle = this.selectedMessage.topic;
+      // console.log("Message Clicked", data);
+    },
     refreshstatusbuttontoggled(checked) {
       this.refreshstatus = checked;
       if (checked)
@@ -179,6 +208,15 @@ export default {
         moment(),
       ];
       this.getMessages();
+    },
+    customRow(record) {
+      return {
+        on: {
+          click: () => {
+            this.selectedMessage = record;
+          },
+        },
+      };
     },
   },
   // created() {

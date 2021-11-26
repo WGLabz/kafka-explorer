@@ -1,12 +1,15 @@
-import { log, kafka as kakfkadetails } from "../../persistence";
+import { log, kafka as kakfkadetails, config } from "../../persistence";
 import { sendUserMessage } from "../../messaging";
 
 const init = async () => {
   // Create a Kafka consumer.
+  var consumerGroup = await config.readConfig("KAFKA_CONSUMER_GROUP");
+  console.log("consumerGroup", consumerGroup);
   global.consumer = global.kafka.consumer({
-    groupId: "KAFKA_EXPLORER",
+    groupId:
+      consumerGroup && consumerGroup !== "" ? consumerGroup : "KAFKA_EXPLORER",
   });
-  
+
   const topics = await kakfkadetails.getKafkaTopicsToConsume();
 
   // Connect

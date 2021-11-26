@@ -73,7 +73,7 @@ export default {
         command: "removetopicfromcluster",
         topic: key,
       });
-      console.log(key);
+      // console.log(key);
       this.getMeta();
     },
   },
@@ -99,7 +99,7 @@ export default {
             topic.partitionId = partitionIds.join(", ");
             topic.partitionErrorCode = partitionErrorCodes.join(", ");
           });
-          console.log(topics_);
+          // console.log(topics_);
           this.kafkatopics = topics_;
         }
       });
