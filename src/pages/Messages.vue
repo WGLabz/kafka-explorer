@@ -42,12 +42,20 @@
           :customRow="customRow"
         >
           <template v-slot:message="record">
-            <small v-on:click="messageselected(record)" style="cursor: pointer;">
-              <a-icon type="message" class="px-1" />
-              {{ JSON.parse(record).value.substring(0, 60) }} <br />
-              <a-icon type="key" class="px-1" />
-              {{ JSON.parse(record).key || "NO_KEY" }}
-            </small>
+            <a-tooltip placement="topLeft">
+              <template v-slot:title>
+                <span>Click to explore!</span>
+              </template>
+              <small
+                v-on:click="messageselected(record)"
+                style="cursor: pointer"
+              >
+                <a-icon type="message" class="px-1" />
+                {{ JSON.parse(record).value.substring(0, 60) }} <br />
+                <a-icon type="key" class="px-1" />
+                {{ JSON.parse(record).key || "NO_KEY" }}
+              </small>
+            </a-tooltip>
           </template>
         </a-table>
       </a-col>
