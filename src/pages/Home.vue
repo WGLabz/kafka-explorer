@@ -2,7 +2,7 @@
   <!-- eslint-disable vue/no-deprecated-slot-scope-attribute -->
   <!-- eslint-disable vue/no-deprecated-slot-attribute  -->
   <div class="mt-4">
-    <a-row type="flex" :gutter="[8, 8]">
+    <a-row type="flex" :gutter="[4, 4]">
       <a-col :span="16" :order="1">
         <home-page-producer />
       </a-col>
@@ -10,23 +10,9 @@
         <home-page-consumer />
       </a-col>
     </a-row>
-    <a-row type="flex" class="mt-2" :gutter="[8, 8]">
+    <a-row type="flex" class="mt-2" :gutter="[4, 4]">
       <a-col :span="14" :order="3">
         <a-card title="Logs" size="small">
-          <!-- <a-tag
-            class="mb-1"
-            v-for="(log, index) in logs"
-            :color="
-              log.type === 'ERROR'
-                ? 'red'
-                : log.type === 'WARN'
-                ? 'yellow'
-                : 'green'
-            "
-            :key="index"
-            >{{ log.message }}
-            <small>{{ moment(log.timestamp).format("HH:mm") }}</small>
-          </a-tag> -->
           <a-list size="small" :data-source="logs">
             <a-list-item slot="renderItem" slot-scope="item">
               <small> {{ item.message }}</small>

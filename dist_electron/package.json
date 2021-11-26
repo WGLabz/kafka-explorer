@@ -16,7 +16,6 @@
   "main": "background.js",
   "dependencies": {
     "@ant-design/icons": "^4.7.0",
-    "@vue/composition-api": "^1.4.0",
     "ant-design-vue": "^1.7.8",
     "core-js": "^3.6.5",
     "fast-xml-parser": "^4.0.0-beta.2",
@@ -31,7 +30,6 @@
     "vue-code-highlight": "^0.7.8",
     "vue-json-viewer": "^2.2.20",
     "vue-router": "^3.5.3",
-    "vue-xml-viewer": "^0.1.4",
     "vuetify": "^2.4.0",
     "vuex": "^3.6.2"
   },

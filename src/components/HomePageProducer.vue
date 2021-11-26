@@ -1,6 +1,6 @@
 <template>
   <!-- eslint-disable vue/no-deprecated-slot-attribute  -->
-  <a-card size="small" title="Produce Message" style="height: 230px">
+  <a-card size="small" title="Produce Message" style="height: 240px">
     <a-input
       placeholder="Topic"
       allow-clear

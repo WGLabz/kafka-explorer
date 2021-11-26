@@ -1,7 +1,7 @@
 <template>
   <!-- eslint-disable vue/no-deprecated-slot-attribute  -->
   <div>
-    <a-card size="small" title="Consumed" style="height: 230px">
+    <a-card size="small" title="Consumed" style="height: 240px">
       <a-badge slot="extra" :color="consumerStatus"></a-badge>
       <a-input
         placeholder="Topic"
@@ -30,6 +30,7 @@
             :color="isLatest(data_.timestamp) ? 'green' : 'red'"
             @click="messageselected(data_)"
             style="cursor: pointer"
+            size="small"
           >
             {{ formatMessage(data_.message).value.substring(0, 18) }}
             <small style="color: brown">
