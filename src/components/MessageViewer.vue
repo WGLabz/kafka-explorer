@@ -1,13 +1,14 @@
 <template>
   <!-- eslint-disable vue/no-deprecated-slot-attribute  -->
   <div>
-    KEY:
     <a-tag style="margin-bottom: 10px" color="purple" small>
       {{ JSON.parse(data.message).key || "No Key" }}
     </a-tag>
-    Headers:
     <a-tag style="margin-bottom: 10px" color="pink" small>
       {{ JSON.parse(data.message).headers || "No Headers" }}
+    </a-tag>
+    <a-tag  v-if="data.type" style="margin-bottom: 10px" color="orange" small>
+      {{ data.type || "No Headers" }}
     </a-tag>
     <a-tabs
       default-active-key="1"
