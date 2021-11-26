@@ -5,10 +5,10 @@
       {{ JSON.parse(data.message).key || "No Key" }}
     </a-tag>
     <a-tag style="margin-bottom: 10px" color="pink" small>
-      {{ JSON.parse(data.message).headers || "No Headers" }}
+      {{ headers && JSON.stringify(headers) !== "{}" ? headers : "No Headers" }}
     </a-tag>
-    <a-tag  v-if="data.type" style="margin-bottom: 10px" color="orange" small>
-      {{ data.type || "No Headers" }}
+    <a-tag v-if="data.type" style="margin-bottom: 10px" color="orange" small>
+      {{ data.type || "No Type Info" }}
     </a-tag>
     <a-tabs
       default-active-key="1"
@@ -68,6 +68,7 @@ export default {
       jsoncontent: Object,
       XML_VAL: "",
       activeKey: "1",
+      headers: {},
     };
   },
   methods: {
@@ -93,6 +94,7 @@ export default {
       } else {
         this.XML_VAL = "";
       }
+      this.headers = JSON.parse(val.message).headers;
     },
   },
   mounted() {
