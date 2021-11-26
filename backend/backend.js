@@ -217,7 +217,7 @@ ipcMain.on("conf", async (event, arg) => {
       server: await config.readConfig("KAFKA_BOOTSTRAP_SERVER"),
       username: await config.readConfig("KAFKA_USERNAME"),
       password: await config.readConfig("KAFKA_PASSWORD"),
-      consumergrp: await config.readConfig("KAFKA_CONSUMER_GROUP"),
+      consgrp: await config.readConfig("KAFKA_CONSUMER_GROUP"),
     });
   }
   if (command === "SET") {

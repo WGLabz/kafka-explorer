@@ -3,8 +3,11 @@ import { sendUserMessage } from "../../messaging";
 
 const init = async () => {
   // Create a Kafka consumer.
+  var consumerGroup = await config.readConfig("KAFKA_CONSUMER_GROUP");
+  console.log("consumerGroup", consumerGroup);
   global.consumer = global.kafka.consumer({
-    groupId: config.readConfig("KAFKA_CONSUMER_GROUP") || "KAFKA_EXPLORER",
+    groupId:
+      consumerGroup && consumerGroup !== "" ? consumerGroup : "KAFKA_EXPLORER",
   });
 
   const topics = await kakfkadetails.getKafkaTopicsToConsume();
