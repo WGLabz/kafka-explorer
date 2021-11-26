@@ -20,7 +20,7 @@ const config = {
         name: name,
       })
       .sort();
-    return config.length > 0 ? config[0].value : false;
+    return config.length > 0 ? config[0].value : "";
   },
   updateConfig: async (name, value) => {
     // Check if config already exists
