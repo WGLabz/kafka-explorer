@@ -1,5 +1,5 @@
 const { logLevel } = require("kafkajs");
-import { log as log_} from "./persistence/index";
+import { log as log_} from "../persistence/index";
 const toCustomLogLevel = (level) => {
   switch (level) {
     case logLevel.ERROR:

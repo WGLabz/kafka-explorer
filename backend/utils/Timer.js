@@ -1,5 +1,5 @@
-import { initAdmin, getClusterInfo } from "./kafka/admin/admin";
-import { kafka, logs, log } from "./persistence/index";
+import { initAdmin, getClusterInfo } from "../kafka/admin/admin";
+import { kafka, logs, log } from "../persistence/index";
 import { dirsizeSync } from "./DBSize";
 import {
   sendCluseterDetails,
