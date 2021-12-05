@@ -58,6 +58,9 @@ const config = {
       }
     }
   },
+  removeAllConfig: async () => {
+    return await db.config.remove({}, { multi: true });
+  },
   reset: () => {},
 };
 
@@ -151,7 +154,7 @@ const kafka = {
     return await db.topics.find({}).sort({ lastedit: -1 });
   },
   getMessages: async (query) => {
-    const messages = await db.messages
+    return await db.messages
       .find({
         $and: [
           { timestamp: { $gt: query.start } },
@@ -159,12 +162,20 @@ const kafka = {
         ],
       })
       .sort({ timestamp: -1 });
-    return messages;
+  },
+  removeAllMessages: async () => {
+    return await db.messages.remove({}, { multi: true });
+  },
+  removeAllTopics: async () => {
+    return await db.topics.remove({}, { multi: true });
   },
 };
 
 // All log related Ops
 const logs = {
+  removeAllLogs: async () => {
+    return await db.log.remove({}, { multi: true });
+  },
   getlogs: async (query) => {
     let type = query.type;
     let filter = {};
@@ -213,7 +224,7 @@ const logs = {
         ];
         break;
     }
-    const docs = await db.log
+    return await db.log
       .find({
         $and: [
           filter,
@@ -226,7 +237,6 @@ const logs = {
         ],
       })
       .sort({ timestamp: -1 });
-    return docs;
   },
   getLatestLogs: async (limit) => {
     return await db.log.find().sort({ timestamp: -1 }).limit(limit);

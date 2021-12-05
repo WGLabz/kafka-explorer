@@ -1,4 +1,3 @@
-import { logs } from "./persistence";
 import {
   ConsumerInit,
   ConsumerClose,
@@ -7,7 +6,7 @@ import {
   SendMessage,
   createTopic,
 } from "./kafka";
-import { config, kafka } from "./persistence";
+import { config, kafka, logs } from "./persistence";
 import { ipcMain } from "electron";
 import { sendUserMessage } from "./messaging";
 import { init as RunTimer } from "./timer";
@@ -258,5 +257,47 @@ ipcMain.on("conf", async (event, arg) => {
       .catch((err) => {
         console.log("Kafka", err);
       });
+  }
+  if (command === "PURGE_DATABASE") {
+    if (arg.CONFIG) {
+      config
+        .removeAllConfig()
+        .then(() => {
+          sendUserMessage("INFO", `App config cleared!`);
+        })
+        .catch(() => {
+          sendUserMessage("ERROR", `App config clear failed!`);
+        });
+    }
+    if (arg.LOGS) {
+      logs
+        .removeAllLogs()
+        .then(() => {
+          sendUserMessage("INFO", `Logs purged successfully!`);
+        })
+        .catch(() => {
+          sendUserMessage("ERROR", `Failed to purge logs`);
+        });
+    }
+    if (arg.MESSAGES) {
+      kafka
+        .removeAllMessages()
+        .then(() => {
+          sendUserMessage("INFO", `Messages purged successfully!`);
+        })
+        .catch(() => {
+          sendUserMessage("ERROR", `Failed to purge messages`);
+        });
+    }
+    if (arg.TOPICS) {
+      kafka
+        .removeAllTopics()
+        .then(() => {
+          sendUserMessage("INFO", `Kafka topics purged successfully!`);
+        })
+        .catch(() => {
+          sendUserMessage("ERROR", `Failed to purge kafka topics.`);
+        });
+    }
   }
 });

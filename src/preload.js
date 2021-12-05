@@ -18,6 +18,7 @@ contextBridge.exposeInMainWorld("ipcRenderer", {
       "kafkamessagesresponse",
       "kafkatopics",
       "autologs",
+      "dbsize",
     ];
     if (validChannels.includes(channel)) {
       ipcRenderer.on(channel, (event, ...args) => func(...args));

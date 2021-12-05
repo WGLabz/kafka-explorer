@@ -43,7 +43,7 @@
       </div>
     </v-main>
 
-    <v-footer height="20" padless app color="primary" fixed>
+    <v-footer height="25" padless app color="primary" fixed>
       <NewFooter />
     </v-footer>
   </v-app>

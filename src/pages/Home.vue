@@ -15,7 +15,7 @@
         <a-card title="Logs" size="small">
           <a-list size="small" :data-source="logs">
             <a-list-item slot="renderItem" slot-scope="item">
-              <small> {{ item.message }}</small>
+              <small> {{ item.message.substring(0,70) }}</small>
               <a-tag
                 size="small"
                 :color="
@@ -26,7 +26,7 @@
                     : 'green'
                 "
               >
-                <small>{{ moment(item.timestamp).format("HH:mm") }} </small>
+                <small>{{ moment(item.timestamp).format("HH:mm:ss") }} </small>
               </a-tag>
             </a-list-item>
           </a-list>

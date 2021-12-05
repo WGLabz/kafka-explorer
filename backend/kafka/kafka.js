@@ -1,5 +1,6 @@
 const { Kafka } = require("kafkajs");
 import { config } from "../persistence";
+import { CustomLogCreator } from "../CustomLogger";
 
 const kafkaInit = () => {
   global.kafka = null;
@@ -26,6 +27,7 @@ const kafkaInit = () => {
       ssl,
       sasl,
       requestTimeout: 25000,
+      logCreator: CustomLogCreator,
     });
   });
 };
