@@ -1,6 +1,6 @@
 const { Kafka } = require("kafkajs");
 import { config } from "../persistence";
-import { CustomLogCreator } from "../CustomLogger";
+import { CustomLogCreator } from "../utils/CustomLogger";
 
 const kafkaInit = () => {
   global.kafka = null;

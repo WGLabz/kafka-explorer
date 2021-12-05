@@ -1,5 +1,5 @@
 import { log, kafka as kakfkadetails, config } from "../../persistence";
-import { sendUserMessage } from "../../messaging";
+import { sendUserMessage } from "../../utils/messaging";
 
 const init = async () => {
   // Create a Kafka consumer.
