@@ -3,7 +3,7 @@
   <div>
     <a-row type="flex" :gutter="[8, 8]">
       <a-col :span="6" :order="1">
-        <a-card title="Cluster Config" size="small">
+        <a-card title="Cluster" size="small">
           <a-space direction="vertical">
             <a-input
               placeholder="Bootstrap Server(s)"
@@ -30,13 +30,13 @@
             @click="saveServerInfo"
             size="small"
             slot="extra"
-            icon="check"
-          >
+            icon="save"
+            >Save
           </a-button>
         </a-card>
       </a-col>
-      <a-col :span="6" :order="2">
-        <a-card title="Topic Config" size="small">
+      <a-col :span="7" :order="2">
+        <a-card title="Consumer Group" size="small">
           <a-space direction="vertical">
             <a-input
               placeholder="Consumer Group"
@@ -51,8 +51,8 @@
             type="primary"
             @click="saveconsumergrp"
             size="small"
-            icon="check"
-          >
+            icon="save"
+            >Save
           </a-button>
         </a-card>
       </a-col>
@@ -106,7 +106,7 @@ export default {
           this.server = args.server;
           this.username = args.username;
           this.password = args.password;
-          this.consumergrp = args.consgrp
+          this.consumergrp = args.consgrp;
         }
       });
     });

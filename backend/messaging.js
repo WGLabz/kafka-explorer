@@ -38,10 +38,16 @@ const sendLogs = (data) => {
   });
 };
 
+const sendDbSize = (size) => {
+  webContents.getAllWebContents().map((content) => {
+    content.send("dbsize", size);
+  });
+};
 export {
   sendUserMessage,
   sendCluseterDetails,
   sendKafkaMessages,
   sendKafkaTopics,
   sendLogs,
+  sendDbSize,
 };

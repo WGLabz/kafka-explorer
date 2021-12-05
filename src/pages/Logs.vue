@@ -1,7 +1,7 @@
 <template>
   <!-- eslint-disable vue/no-v-model-argument  -->
   <div>
-    <a-row type="flex" justify="start" class="mb-5">
+    <a-row type="flex" justify="start" class="mb-1">
       <a-col :span="24">
         <a-select
           class="mr-3"
@@ -34,7 +34,7 @@
         </a-button>
       </a-col>
     </a-row>
-    <a-row :gutter="16">
+    <a-row :gutter="8">
       <a-col>
         <a-table
           bordered
@@ -48,11 +48,15 @@
           <template v-slot:type="text">
             <a-tag
               :color="text === 'INFO' ? '' : text === 'WARN' ? 'orange' : 'red'"
-              >{{ text }}</a-tag
             >
+              {{ text }}
+            </a-tag>
           </template>
-          <template v-slot:id="text">
-            {{ text.substring(0, 5) }}
+          <template v-slot:message="text">
+            <small>{{ text.substring(0, 105) }}</small>
+          </template>
+          <template v-slot:date="text">
+            <small>{{ text }} </small>
           </template>
         </a-table>
       </a-col>
@@ -93,20 +97,20 @@ export default {
       },
       headers: [
         {
-          title: "ID",
-          align: "start",
-          sortable: false,
-          dataIndex: "_id",
-          width: "70px",
-          scopedSlots: { customRender: "id" },
+          title: "Date",
+          dataIndex: "timestamp",
+          scopedSlots: { customRender: "date" },
         },
-        { title: "Date", dataIndex: "timestamp" },
         {
           title: "Type",
           dataIndex: "type",
           scopedSlots: { customRender: "type" },
         },
-        { title: "message", dataIndex: "message" },
+        {
+          title: "message",
+          dataIndex: "message",
+          scopedSlots: { customRender: "message" },
+        },
       ],
       logs: [],
       // Values to be passed to backend
