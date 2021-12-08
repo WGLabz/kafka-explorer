@@ -26,6 +26,13 @@
           style="width: 270px"
           @ok="onOk"
         />
+        <a-input
+          style="width: 120px"
+          class="mr-3"
+          v-model="searchtext"
+          placeholder="Text to search"
+          type="primary"
+        />
         <a-button class="mr-3" icon="search" @click="load" type="primary">
           Search
         </a-button>
@@ -85,6 +92,7 @@ import moment from "moment";
 export default {
   data() {
     return {
+      searchtext: "",
       rangepickerval: [moment(new Date() - 24 * 60 * 60 * 1000), moment()],
       logTypeDfaultSelection: "WARN",
       logTypeOptions: ["INFO", "WARN", "ERROR"],
@@ -141,6 +149,8 @@ export default {
         moment(new Date() - 24 * 60 * 60 * 1000),
         moment(),
       ];
+      this.startDate = new Date(new Date() - 24 * 60 * 60 * 1000);
+      this.endDate = new Date();
       this.load();
     },
     loadLogs() {
@@ -148,6 +158,7 @@ export default {
         type: this.logType,
         start: this.startDate,
         end: this.endDate,
+        text: this.searchtext,
       });
     },
     onOk(value) {

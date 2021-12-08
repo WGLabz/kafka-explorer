@@ -173,15 +173,6 @@ const kafka = {
           }
           return val;
         },
-        // $and: [
-        //   { timestamp: { $gt: query.start } },
-        //   { timestamp: { $lt: query.end } },
-        //   // {
-        //   //   $where: function () {
-        //   //     return this.message.indexOf(query.text) > -1;
-        //   //   },
-        //   // },
-        // ],
       })
       .sort({ timestamp: -1 });
   },
@@ -200,63 +191,54 @@ const logs = {
   },
   getlogs: async (query) => {
     let type = query.type;
-    let filter = {};
-    switch (type) {
-      case "WARN":
-        filter.$or = [
-          {
-            type: "WARN",
-          },
-          {
-            type: "ERROR",
-          },
-        ];
-        break;
-      case "INFO":
-        filter.$or = [
-          {
-            type: "INFO",
-          },
-          {
-            type: "WARN",
-          },
-          {
-            type: "ERROR",
-          },
-        ];
-        break;
-      case "ERROR":
-        filter.$or = [
-          {
-            type: "ERROR",
-          },
-        ];
-        break;
-      default:
-        filter.$or = [
-          {
-            type: "INFO",
-          },
-          {
-            type: "WARN",
-          },
-          {
-            type: "ERROR",
-          },
-        ];
-        break;
-    }
+    // let filter = {};
+
     return await db.log
       .find({
-        $and: [
-          filter,
-          {
-            $and: [
-              { timestamp: { $gt: query.start } },
-              { timestamp: { $lt: query.end } },
-            ],
-          },
-        ],
+        $where: function () {
+          var log = this;
+          var val = log.timestamp > query.start && log.timestamp < query.end;
+
+          if (query.text && query.text !== "") {
+            val = val && log.message.indexOf(query.text) > -1;
+          }
+
+          switch (type) {
+            case "WARN":
+              val = val && (log.type === "WARN" || log.type === "ERROR");
+              break;
+            case "INFO":
+              val =
+                val &&
+                (log.type === "WARN" ||
+                  log.type === "ERROR" ||
+                  log.type === "INFO");
+
+              break;
+            case "ERROR":
+              val = val && log.type === "ERROR";
+
+              break;
+            default:
+              val =
+                val &&
+                (log.type === "WARN" ||
+                  log.type === "ERROR" ||
+                  log.type === "INFO");
+              break;
+          }
+          return val;
+        },
+
+        // $and: [
+        //   filter,
+        //   {
+        //     $and: [
+        //       { timestamp: { $gt: query.start } },
+        //       { timestamp: { $lt: query.end } },
+        //     ],
+        //   },
+        // ],
       })
       .sort({ timestamp: -1 });
   },
