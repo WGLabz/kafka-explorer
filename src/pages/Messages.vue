@@ -11,6 +11,13 @@
           v-model:vlue="rangepickerval"
           @ok="onOk"
         />
+        <a-input
+          style="width: 120px"
+          class="mr-3"
+          v-model="searchtext"
+          placeholder="Text to search"
+          type="primary"
+        />
         <a-button class="" icon="search" @click="getMessages" type="primary">
           Search
         </a-button>
@@ -87,6 +94,7 @@ export default {
   data() {
     return {
       refreshstatus: false,
+      searchtext: "",
       rangepickerval: [],
       addnewtopicmodalvisibility: false,
       server: "",
@@ -180,7 +188,6 @@ export default {
     messageselected() {
       this.messagedetailsmodal = true;
       this.messagemodaltitle = this.selectedMessage.topic;
-      // console.log("Message Clicked", data);
     },
     refreshstatusbuttontoggled(checked) {
       this.refreshstatus = checked;
@@ -198,6 +205,7 @@ export default {
         command: "getmessages",
         start: this.startDate,
         end: this.endDate,
+        text: this.searchtext,
       });
       this.addnewtopicmodalvisibility = false;
     },
@@ -219,11 +227,5 @@ export default {
       };
     },
   },
-  // created() {
-  //   this.poolMessages();
-  // },
-  // beforeUnmount() {
-  //   clearInterval(this.polling);
-  // },
 };
 </script>

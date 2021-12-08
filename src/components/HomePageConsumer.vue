@@ -101,7 +101,6 @@ export default {
       this.messagedetailsmodal = true;
       this.selectedMessage = data;
       this.messagemodaltitle = data.topic;
-      // console.log("Message Clicked", data);
     },
     formatMessage(msg) {
       return JSON.parse(msg);

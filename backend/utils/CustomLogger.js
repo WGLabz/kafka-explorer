@@ -19,23 +19,6 @@ const CustomLogCreator = () => {
     const { message } = log;
     log_(message, toCustomLogLevel(level));
   };
-
-  //   const logger = winston.createLogger({
-  //     level: toCustomLogLevel(logLevel),
-  //     transports: [
-  //         new winston.transports.Console(),
-  //         new winston.transports.File({ filename: 'myapp.log' })
-  //     ]
-  // })
-
-  // return ({ namespace, level, label, log }) => {
-  //     const { message, ...extra } = log
-  //     logger.log({
-  //         level: toCustomLogLevel(level),
-  //         message,
-  //         extra,
-  //     })
-  // }
 };
 
 export { CustomLogCreator };

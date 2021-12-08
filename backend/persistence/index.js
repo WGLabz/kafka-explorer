@@ -142,8 +142,6 @@ const kafka = {
           isActive: true,
         });
       } else {
-        // console.log("Exist");
-        // console.log("Topic already exists!");
         return Promise.resolve("false");
       }
     } catch (err) {
@@ -156,10 +154,25 @@ const kafka = {
   getMessages: async (query) => {
     return await db.messages
       .find({
-        $and: [
-          { timestamp: { $gt: query.start } },
-          { timestamp: { $lt: query.end } },
-        ],
+        $where: function () {
+          var message = this;
+          var val =
+            message.timestamp > query.start && message.timestamp < query.end;
+          
+          if (query.text && query.text !== "") {
+            val = val && message.message.indexOf(query.text) > -1;
+          }
+          return val;
+        },
+        // $and: [
+        //   { timestamp: { $gt: query.start } },
+        //   { timestamp: { $lt: query.end } },
+        //   // {
+        //   //   $where: function () {
+        //   //     return this.message.indexOf(query.text) > -1;
+        //   //   },
+        //   // },
+        // ],
       })
       .sort({ timestamp: -1 });
   },

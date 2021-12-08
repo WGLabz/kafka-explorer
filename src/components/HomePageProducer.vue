@@ -69,12 +69,10 @@ export default {
   },
   methods: {
     onEdit(targetKey, action) {
-      // console.log(targetKey, action);
       if (action === "remove") {
         let toRemovePanName = this.panes.find(
           (pane) => pane.key === targetKey
         ).title;
-        // console.log(toRemovePanName);
         this.panes = this.panes.filter((pane) => pane.key !== targetKey);
         this.addedPanes = this.addedPanes.filter(
           (paneName) => paneName !== toRemovePanName

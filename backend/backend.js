@@ -6,7 +6,7 @@ import {
   SendMessage,
   createTopic,
 } from "./kafka";
-import { config, kafka, logs } from "./persistence";
+import { config, kafka, logs, log } from "./persistence";
 import { ipcMain } from "electron";
 import { sendUserMessage } from "./utils/messaging";
 import { init as RunTimer } from "./utils/timer";
@@ -32,7 +32,7 @@ const reconnectKafka = () => {
         initAdmin();
       })
       .catch((err) => {
-        console.log("Kafka", err);
+        log(err, "ERROR");
       });
     sendUserMessage("INFO", `Reconnected!`);
   } catch (e) {
@@ -46,7 +46,7 @@ ipcMain.on("logGet", (event, arg) => {
       event.reply("logGetResponse", logs_);
     })
     .catch((err) => {
-      console.log(err);
+      log(err, "ERROR");
     });
 });
 
@@ -216,7 +216,6 @@ ipcMain.on("conf", async (event, arg) => {
   }
   if (command === "SET") {
     try {
-      console.log(arg);
       await config.updateConfig("KAFKA_USERNAME", arg.username);
       await config.updateConfig("KAFKA_PASSWORD", arg.password);
       await config.updateConfig("KAFKA_BOOTSTRAP_SERVER", arg.server);
@@ -247,10 +246,9 @@ ipcMain.on("conf", async (event, arg) => {
         ConsumerInit();
         ProducerInit();
         initAdmin();
-        console.log("Kafka Initialized");
       })
       .catch((err) => {
-        console.log("Kafka", err);
+        log(err, "ERROR");
       });
   }
   if (command === "PURGE_DATABASE") {
