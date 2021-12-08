@@ -9,6 +9,20 @@
           <a-button @click="handleClusterTopicModal" type="primary">
             Topics in Cluster
           </a-button>
+          <a-input
+            style="width: 120px"
+            v-model="searchText"
+            placeholder="Text to search"
+            type="primary"
+          />
+          <a-button
+            class="float-right"
+            icon="lens"
+            @click="searchTopics"
+            type="secondary"
+          >
+            Search
+          </a-button>
         </a-space>
       </a-col>
       <a-col>
@@ -91,6 +105,7 @@ export default {
   components: { AddNewKafkaTopic, ClusterTopics },
   data() {
     return {
+      searchText: "",
       paginationSettings: {
         size: "small",
         pageSize: 7,
@@ -209,6 +224,12 @@ export default {
       this.clustertopicsmodalvisibility = false;
     },
     moment,
+    searchTopics() {
+      window.ipcRenderer.send("kafka", {
+        command: "gettopics",
+        text: this.searchText,
+      });
+    },
   },
 };
 </script>

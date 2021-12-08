@@ -148,8 +148,17 @@ const kafka = {
       return false;
     }
   },
-  getTopics: async () => {
-    return await db.topics.find({}).sort({ lastedit: -1 });
+  getTopics: async (query) => {
+    return await db.topics
+      .find({
+        $where: function () {
+          var topic = this;
+          if (query.text && query.text !== "") {
+            return topic.name.indexOf(query.text) > -1;
+          } else return true;
+        },
+      })
+      .sort({ lastedit: -1 });
   },
   getMessages: async (query) => {
     return await db.messages
@@ -158,7 +167,7 @@ const kafka = {
           var message = this;
           var val =
             message.timestamp > query.start && message.timestamp < query.end;
-          
+
           if (query.text && query.text !== "") {
             val = val && message.message.indexOf(query.text) > -1;
           }

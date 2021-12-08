@@ -24,7 +24,7 @@ const init = () => {
         });
 
       // Senda all kafka topics
-      kafka.getTopics().then((res) => {
+      kafka.getTopics({}).then((res) => {
         sendKafkaTopics(res);
       });
 

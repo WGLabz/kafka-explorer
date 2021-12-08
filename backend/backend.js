@@ -116,7 +116,7 @@ ipcMain.on("kafka", (event, arg) => {
       break;
 
     case "gettopics":
-      kafka.getTopics().then((topics) => {
+      kafka.getTopics(arg).then((topics) => {
         event.reply("kafkaResponse", { topics: topics, type: "topics" });
       });
       break;
