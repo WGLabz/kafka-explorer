@@ -39,6 +39,11 @@
           </a-tag>
         </a-tooltip>
       </p>
+      <div v-if="data.length === 0" style="width: 100%; text-align: center">
+        <a-icon type="warning" style="color: #dba800; fontsize: 20px" />
+        <br />
+        <small> No message </small>
+      </div>
     </a-card>
     <a-modal
       size="small"

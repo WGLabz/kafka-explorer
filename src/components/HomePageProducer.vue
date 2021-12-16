@@ -40,6 +40,7 @@
       type="editable-card"
       @edit="onEdit"
       size="small"
+      v-if="panes.length > 0"
     >
       <a-tab-pane
         v-for="pane in panes"
@@ -50,6 +51,14 @@
         <producer-tab-content :topic="pane.title" />
       </a-tab-pane>
     </a-tabs>
+    <div v-if="panes.length === 0" style="width: 100%; text-align: center">
+      <a-icon type="info-circle" style="color: #0ca6f5; fontsize: 20px" />
+      <br />
+      <small>
+        Please select a topic from the dropdown above or add a topic above to
+        publish message.
+      </small>
+    </div>
   </a-card>
 </template>
 

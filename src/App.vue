@@ -33,6 +33,8 @@
         style="width: 100%; text-align: center; position: absolute; top: 50%"
       >
         <a-spin />
+        <br>
+        <b>Trying to connect to configured cluster!</b>
       </div>
     </v-main>
     <v-main class="mx-2 my-2" v-else-if="loaded === -1">

@@ -15,7 +15,7 @@
         <a-card title="Logs" size="small">
           <a-list size="small" :data-source="logs">
             <a-list-item slot="renderItem" slot-scope="item">
-              <small> {{ item.message.substring(0,70) }}</small>
+              <small> {{ item.message.substring(0, 70) }}</small>
               <a-tag
                 size="small"
                 :color="
@@ -34,18 +34,30 @@
       </a-col>
       <a-col :span="10" :order="4">
         <a-card title="Cluster Information" size="small">
-          <a-list size="small" :data-source="clusterInfo.brokers">
-            <a-list-item slot="renderItem" slot-scope="item">
-              <small> {{ item.host }}</small>
-              <a-tag color="green">
-                <small>{{ item.port }} </small>
-              </a-tag>
-              <a-tag color="purple">
-                <small>{{ item.nodeId }} </small>
-              </a-tag>
-              <a-tag color="pink" v-if="item.isController"> C </a-tag>
-            </a-list-item>
-          </a-list>
+          <div
+            v-if="
+              clusterInfo.brokers &&
+              clusterInfo.brokers[0].host !== 'Not connected'
+            "
+          >
+            <a-list size="small" :data-source="clusterInfo.brokers">
+              <a-list-item slot="renderItem" slot-scope="item">
+                <small> {{ item.host }}</small>
+                <a-tag color="green">
+                  <small>{{ item.port }} </small>
+                </a-tag>
+                <a-tag color="purple">
+                  <small>{{ item.nodeId }} </small>
+                </a-tag>
+                <a-tag color="pink" v-if="item.isController"> C </a-tag>
+              </a-list-item>
+            </a-list>
+          </div>
+          <div v-else style="width: 100%; text-align: center">
+            <a-icon type="warning" style="color: #dba800; fontsize: 20px" />
+            <br />
+            <small> Cluster information not available </small>
+          </div>
         </a-card>
       </a-col>
     </a-row>
