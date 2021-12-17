@@ -9,14 +9,16 @@
       size="small"
       v-model="topic"
     />
-    <a-button
-      style="margin-left: 8px"
-      slot="extra"
-      icon="plus"
-      size="small"
-      type="primary"
-      @click="hndletopicaddition"
-    />
+    <a-tooltip title="Add topic" slot="extra">
+      <a-button
+        style="margin-left: 8px"
+        size="small"
+        type="primary"
+        @click="hndletopicaddition"
+      >
+        <a-icon type="plus" class="mt-1" />
+      </a-button>
+    </a-tooltip>
 
     <a-select
       class="mr-3"
