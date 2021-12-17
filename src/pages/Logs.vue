@@ -33,12 +33,16 @@
           placeholder="Text to search"
           type="primary"
         />
-        <a-button class="mr-3" icon="search" @click="load" type="primary">
-          Search
-        </a-button>
-        <a-button @click="refresh" class="float-right" icon="reload">
-          Refresh
-        </a-button>
+        <a-tooltip title="Search">
+          <a-button class="mr-3" @click="load" type="primary">
+            <a-icon type="search" class="mt-1" />
+          </a-button>
+        </a-tooltip>
+        <a-tooltip title="Refresh">
+          <a-button @click="refresh" class="float-right">
+            <a-icon type="reload" class="mt-1" />
+          </a-button>
+        </a-tooltip>
       </a-col>
     </a-row>
     <a-row :gutter="8">

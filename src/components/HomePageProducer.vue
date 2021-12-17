@@ -25,6 +25,7 @@
       slot="extra"
       size="small"
       label-in-value
+      placeholder="Select"
       style="width: 90px; margin-left: 8px"
       @change="handletopicselection"
     >
