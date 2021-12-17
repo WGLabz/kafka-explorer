@@ -1,5 +1,6 @@
 const path = require("path");
 const fs = require("fs");
+import { log } from "../persistence";
 
 function dirsizeSync(dirname) {
   let size = 0;
@@ -26,7 +27,7 @@ function dirsizeSync(dirname) {
         }
       });
   } catch (ex) {
-    console.log(ex);
+    log(ex, "ERROR");
   }
   return size;
 }

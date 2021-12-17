@@ -11,14 +11,17 @@
         size="small"
         v-model="topic"
       />
-      <a-button
-        style="margin-left: 8px"
-        slot="extra"
-        icon="plus"
-        size="small"
-        type="primary"
-        @click="hndletopicaddition"
-      />
+      <a-tooltip title="Add topic" slot="extra">
+        <a-button
+          style="margin-left: 8px"
+          size="small"
+          type="primary"
+          @click="hndletopicaddition"
+        >
+          <a-icon type="plus" class="mt-1" />
+        </a-button>
+      </a-tooltip>
+
       <p v-for="(data_, index) in data" :key="index">
         <a-tag>{{ data_.topic }}</a-tag>
         <a-icon type="caret-right" />
@@ -39,6 +42,11 @@
           </a-tag>
         </a-tooltip>
       </p>
+      <div v-if="data.length === 0" style="width: 100%; text-align: center">
+        <a-icon type="warning" style="color: #dba800; fontsize: 20px" />
+        <br />
+        <small> No message </small>
+      </div>
     </a-card>
     <a-modal
       size="small"
@@ -101,7 +109,6 @@ export default {
       this.messagedetailsmodal = true;
       this.selectedMessage = data;
       this.messagemodaltitle = data.topic;
-      // console.log("Message Clicked", data);
     },
     formatMessage(msg) {
       return JSON.parse(msg);

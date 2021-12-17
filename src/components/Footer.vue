@@ -86,7 +86,6 @@ export default {
         ).host;
       });
       window.ipcRenderer.receive("dbsize", (args) => {
-        // console.log(args);
         this.dbSize = (args / 1024).toFixed(2) + " KB";
         this.sizeBlink = !this.sizeBlink;
       });

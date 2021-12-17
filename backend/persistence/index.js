@@ -142,24 +142,37 @@ const kafka = {
           isActive: true,
         });
       } else {
-        // console.log("Exist");
-        // console.log("Topic already exists!");
         return Promise.resolve("false");
       }
     } catch (err) {
       return false;
     }
   },
-  getTopics: async () => {
-    return await db.topics.find({}).sort({ lastedit: -1 });
+  getTopics: async (query) => {
+    return await db.topics
+      .find({
+        $where: function () {
+          var topic = this;
+          if (query.text && query.text !== "") {
+            return topic.name.indexOf(query.text) > -1;
+          } else return true;
+        },
+      })
+      .sort({ lastedit: -1 });
   },
   getMessages: async (query) => {
     return await db.messages
       .find({
-        $and: [
-          { timestamp: { $gt: query.start } },
-          { timestamp: { $lt: query.end } },
-        ],
+        $where: function () {
+          var message = this;
+          var val =
+            message.timestamp > query.start && message.timestamp < query.end;
+
+          if (query.text && query.text !== "") {
+            val = val && message.message.indexOf(query.text) > -1;
+          }
+          return val;
+        },
       })
       .sort({ timestamp: -1 });
   },
@@ -178,63 +191,54 @@ const logs = {
   },
   getlogs: async (query) => {
     let type = query.type;
-    let filter = {};
-    switch (type) {
-      case "WARN":
-        filter.$or = [
-          {
-            type: "WARN",
-          },
-          {
-            type: "ERROR",
-          },
-        ];
-        break;
-      case "INFO":
-        filter.$or = [
-          {
-            type: "INFO",
-          },
-          {
-            type: "WARN",
-          },
-          {
-            type: "ERROR",
-          },
-        ];
-        break;
-      case "ERROR":
-        filter.$or = [
-          {
-            type: "ERROR",
-          },
-        ];
-        break;
-      default:
-        filter.$or = [
-          {
-            type: "INFO",
-          },
-          {
-            type: "WARN",
-          },
-          {
-            type: "ERROR",
-          },
-        ];
-        break;
-    }
+    // let filter = {};
+
     return await db.log
       .find({
-        $and: [
-          filter,
-          {
-            $and: [
-              { timestamp: { $gt: query.start } },
-              { timestamp: { $lt: query.end } },
-            ],
-          },
-        ],
+        $where: function () {
+          var log = this;
+          var val = log.timestamp > query.start && log.timestamp < query.end;
+
+          if (query.text && query.text !== "") {
+            val = val && log.message.indexOf(query.text) > -1;
+          }
+
+          switch (type) {
+            case "WARN":
+              val = val && (log.type === "WARN" || log.type === "ERROR");
+              break;
+            case "INFO":
+              val =
+                val &&
+                (log.type === "WARN" ||
+                  log.type === "ERROR" ||
+                  log.type === "INFO");
+
+              break;
+            case "ERROR":
+              val = val && log.type === "ERROR";
+
+              break;
+            default:
+              val =
+                val &&
+                (log.type === "WARN" ||
+                  log.type === "ERROR" ||
+                  log.type === "INFO");
+              break;
+          }
+          return val;
+        },
+
+        // $and: [
+        //   filter,
+        //   {
+        //     $and: [
+        //       { timestamp: { $gt: query.start } },
+        //       { timestamp: { $lt: query.end } },
+        //     ],
+        //   },
+        // ],
       })
       .sort({ timestamp: -1 });
   },

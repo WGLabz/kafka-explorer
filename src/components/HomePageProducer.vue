@@ -9,20 +9,23 @@
       size="small"
       v-model="topic"
     />
-    <a-button
-      style="margin-left: 8px"
-      slot="extra"
-      icon="plus"
-      size="small"
-      type="primary"
-      @click="hndletopicaddition"
-    />
+    <a-tooltip title="Add topic" slot="extra">
+      <a-button
+        style="margin-left: 8px"
+        size="small"
+        type="primary"
+        @click="hndletopicaddition"
+      >
+        <a-icon type="plus" class="mt-1" />
+      </a-button>
+    </a-tooltip>
 
     <a-select
       class="mr-3"
       slot="extra"
       size="small"
       label-in-value
+      placeholder="Select"
       style="width: 90px; margin-left: 8px"
       @change="handletopicselection"
     >
@@ -40,6 +43,7 @@
       type="editable-card"
       @edit="onEdit"
       size="small"
+      v-if="panes.length > 0"
     >
       <a-tab-pane
         v-for="pane in panes"
@@ -50,6 +54,14 @@
         <producer-tab-content :topic="pane.title" />
       </a-tab-pane>
     </a-tabs>
+    <div v-if="panes.length === 0" style="width: 100%; text-align: center">
+      <a-icon type="info-circle" style="color: #0ca6f5; fontsize: 20px" />
+      <br />
+      <small>
+        Please select a topic from the dropdown above or add a topic above to
+        publish message.
+      </small>
+    </div>
   </a-card>
 </template>
 
@@ -69,12 +81,10 @@ export default {
   },
   methods: {
     onEdit(targetKey, action) {
-      // console.log(targetKey, action);
       if (action === "remove") {
         let toRemovePanName = this.panes.find(
           (pane) => pane.key === targetKey
         ).title;
-        // console.log(toRemovePanName);
         this.panes = this.panes.filter((pane) => pane.key !== targetKey);
         this.addedPanes = this.addedPanes.filter(
           (paneName) => paneName !== toRemovePanName

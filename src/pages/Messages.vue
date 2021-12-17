@@ -11,23 +11,37 @@
           v-model:vlue="rangepickerval"
           @ok="onOk"
         />
-        <a-button class="" icon="search" @click="getMessages" type="primary">
-          Search
-        </a-button>
+        <a-input
+          style="width: 120px"
+          class="mr-3"
+          v-model="searchtext"
+          placeholder="Text to search"
+          type="primary"
+        />
+        <a-tooltip title="Search messages">
+          <a-button type="primary" @click="getMessages">
+            <a-icon type="search" class="mt-1" />
+          </a-button>
+        </a-tooltip>
+        <a-tooltip title="Auto-load messages">
         <a-switch
           @change="refreshstatusbuttontoggled"
-          class="float-right my-2 mr-0"
+          class="float-right my-2 ml-2"
           size="small"
-          style="transform: rotate(90deg)"
+          style=""
         >
           <!-- eslint-disable-next-line vue/no-deprecated-slot-attribute -->
           <a-icon slot="checkedChildren" type="reload" />
           <!-- eslint-disable-next-line vue/no-deprecated-slot-attribute -->
           <a-icon slot="unCheckedChildren" type="close" />
         </a-switch>
-        <a-button class="float-right" icon="reload" @click="reset">
-          Refresh
-        </a-button>
+        </a-tooltip>
+
+        <a-tooltip title="Refresh" class="float-right">
+          <a-button @click="reset">
+            <a-icon type="reload" class="mt-1" />
+          </a-button>
+        </a-tooltip>
       </a-col>
     </a-row>
     <a-row :gutter="16">
@@ -87,6 +101,7 @@ export default {
   data() {
     return {
       refreshstatus: false,
+      searchtext: "",
       rangepickerval: [],
       addnewtopicmodalvisibility: false,
       server: "",
@@ -180,7 +195,6 @@ export default {
     messageselected() {
       this.messagedetailsmodal = true;
       this.messagemodaltitle = this.selectedMessage.topic;
-      // console.log("Message Clicked", data);
     },
     refreshstatusbuttontoggled(checked) {
       this.refreshstatus = checked;
@@ -198,6 +212,7 @@ export default {
         command: "getmessages",
         start: this.startDate,
         end: this.endDate,
+        text: this.searchtext,
       });
       this.addnewtopicmodalvisibility = false;
     },
@@ -219,11 +234,5 @@ export default {
       };
     },
   },
-  // created() {
-  //   this.poolMessages();
-  // },
-  // beforeUnmount() {
-  //   clearInterval(this.polling);
-  // },
 };
 </script>

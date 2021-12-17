@@ -3,23 +3,35 @@
     <a-row>
       <a-col span="12">
         <a-space size="small">
-          <a-button type="primary" @click="handleAdd" icon="plus">
-            Add
-          </a-button>
-          <a-button @click="handleClusterTopicModal" type="primary">
-            Topics in Cluster
-          </a-button>
+          <a-tooltip title="Add new topic">
+            <a-button type="primary" @click="handleAdd">
+              <a-icon type="plus" class="mt-1" />
+            </a-button>
+          </a-tooltip>
+          <a-tooltip title="View topics available in the cluster">
+            <a-button @click="handleClusterTopicModal" type="primary">
+              <a-icon type="unordered-list" class="mt-1" />
+            </a-button>
+          </a-tooltip>
+          <a-input
+            style="width: 120px"
+            v-model="searchText"
+            placeholder="Text to search"
+            type="primary"
+          />
+          <a-tooltip title="Search configured topics">
+            <a-button type="primary" class="float-right" @click="searchTopics">
+              <a-icon type="search" class="mt-1" />
+            </a-button>
+          </a-tooltip>
         </a-space>
       </a-col>
       <a-col>
-        <a-button
-          class="float-right"
-          icon="reload"
-          @click="getTopics"
-          type="secondary"
-        >
-          Refresh
-        </a-button>
+        <a-tooltip title="Refresh">
+          <a-button class="float-right" @click="getTopics" type="secondary">
+            <a-icon type="reload" class="mt-1" />
+          </a-button>
+        </a-tooltip>
       </a-col>
     </a-row>
 
@@ -41,7 +53,9 @@
               @confirm="() => onDisable(record._id)"
               style="margin: 5px"
             >
-              <a-button type="warning" icon="stop" size="small" />
+              <a-tooltip title="Disable the topic">
+                <a-button type="warning" icon="stop" size="small" />
+              </a-tooltip>
             </a-popconfirm>
             <a-popconfirm
               v-else
@@ -49,14 +63,18 @@
               @confirm="() => onEnable(record._id)"
               style="margin: 5px"
             >
-              <a-button type="success" size="small" icon="caret-right" />
+              <a-tooltip title="Enable the topic">
+                <a-button type="success" size="small" icon="caret-right" />
+              </a-tooltip>
             </a-popconfirm>
             <a-popconfirm
               v-if="kafkatopics.length"
               title="Sure to delete?"
               @confirm="() => onDelete(record._id)"
             >
-              <a-button type="danger" size="small" icon="delete" />
+              <a-tooltip title="Remove the topic">
+                <a-button type="danger" size="small" icon="delete" />
+              </a-tooltip>
             </a-popconfirm>
           </template>
         </a-table>
@@ -91,6 +109,7 @@ export default {
   components: { AddNewKafkaTopic, ClusterTopics },
   data() {
     return {
+      searchText: "",
       paginationSettings: {
         size: "small",
         pageSize: 7,
@@ -209,6 +228,12 @@ export default {
       this.clustertopicsmodalvisibility = false;
     },
     moment,
+    searchTopics() {
+      window.ipcRenderer.send("kafka", {
+        command: "gettopics",
+        text: this.searchText,
+      });
+    },
   },
 };
 </script>

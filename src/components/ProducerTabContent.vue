@@ -108,7 +108,6 @@ export default {
               return b.timestamp - a.timestamp;
             })
             .slice(0, 10);
-          // console.log(this.publishedMessages);
         }
       });
     });
