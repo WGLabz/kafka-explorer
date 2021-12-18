@@ -51,7 +51,7 @@
   </div>
 </template>
 <script>
-import pd from "pretty-data";
+// import pd from "pretty-data";
 const { XMLValidator } = require("../../node_modules/fast-xml-parser/src/fxp");
 import SshPre from "simple-syntax-highlighter";
 import "simple-syntax-highlighter/dist/sshpre.css";
@@ -90,7 +90,7 @@ export default {
       }).err;
 
       if (!this.xmlpane) {
-        this.XML_VAL = pd.pd.xml(message);
+        this.XML_VAL = message;//pd.pd.xml(message);
       } else {
         this.XML_VAL = "";
       }
