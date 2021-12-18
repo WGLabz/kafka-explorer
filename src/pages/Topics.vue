@@ -1,6 +1,6 @@
 <template>
   <div>
-    <a-row>
+    <a-row class="mb-4">
       <a-col span="12">
         <a-space size="small">
           <a-tooltip title="Add new topic">
@@ -35,7 +35,7 @@
       </a-col>
     </a-row>
 
-    <a-row class="pt-0 mt-0">
+    <a-row :gutter="16">
       <a-col>
         <a-table
           bordered

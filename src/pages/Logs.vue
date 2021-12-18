@@ -45,7 +45,7 @@
         </a-tooltip>
       </a-col>
     </a-row>
-    <a-row :gutter="8">
+    <a-row :gutter="16">
       <a-col>
         <a-table
           bordered
