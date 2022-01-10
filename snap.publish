@@ -1,0 +1,4 @@
+{
+  provider: "generic",
+  url: "https://adummyurl.com"
+}
