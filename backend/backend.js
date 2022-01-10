@@ -9,7 +9,7 @@ import {
 import { config, kafka, logs, log } from "./persistence";
 import { ipcMain } from "electron";
 import { sendUserMessage } from "./utils/messaging";
-import { init as RunTimer } from "./utils/timer";
+import { init as RunTimer } from "./utils/Timer";
 import { closeAdmin, initAdmin, getTopicsMeta } from "./kafka/admin/admin";
 import { kafkaInit } from "./kafka/kafka";
 
