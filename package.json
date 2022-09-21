@@ -33,7 +33,7 @@
     "vue-code-highlight": "^0.7.8",
     "vue-json-viewer": "^2.2.20",
     "vue-router": "^3.5.3",
-    "vuetify": "^2.4.0",
+    "vuetify": "^2.6.10",
     "vuex": "^3.6.2"
   },
   "devDependencies": {
