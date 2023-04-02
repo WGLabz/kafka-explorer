@@ -105,7 +105,7 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var elec
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-eval("module.exports = __webpack_require__(/*! C:\\Users\\oksbw\\Desktop\\New folder\\kafka-explorer\\src\\preload.js */\"./src/preload.js\");\n\n\n//# sourceURL=webpack:///multi_./src/preload.js?");
+eval("module.exports = __webpack_require__(/*! C:\\Users\\oksbw\\Desktop\\kafka-explorer-master\\kafka-explorer\\src\\preload.js */\"./src/preload.js\");\n\n\n//# sourceURL=webpack:///multi_./src/preload.js?");
 
 /***/ }),
 
