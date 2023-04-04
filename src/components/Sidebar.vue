@@ -1,14 +1,14 @@
 <template>
   <v-navigation-drawer permanent mini-variant app expand-on-hover>
     <!-- <v-img src="/logo.jpg" style="height: 40px" /> -->
-    <v-list >
+    <!-- <v-list >
       <v-list-item class="px-2">
         <v-list-item-avatar>
           <v-img src="/logo.jpg" ></v-img>
         </v-list-item-avatar>
       </v-list-item>
     </v-list>
-    <v-divider class="mx-2 mb-2"></v-divider>
+    <v-divider class="mx-2 mb-2"></v-divider> -->
     <!-- eslint-disable-next-line vue/valid-v-for -->
     <v-list nav dense>
       <v-list-item

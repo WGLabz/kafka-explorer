@@ -3,7 +3,7 @@ import { sendUserMessage } from "../../utils/messaging";
 
 const init = async () => {
   // Create a Kafka consumer.
-  var consumerGroup = await config.readConfig("KAFKA_CONSUMER_GROUP");
+  let consumerGroup = await config.readConfig("KAFKA_CONSUMER_GROUP");
   global.consumer = global.kafka.consumer({
     groupId:
       consumerGroup && consumerGroup !== "" ? consumerGroup : "KAFKA_EXPLORER",
@@ -35,7 +35,7 @@ const init = async () => {
   // Listen to incoming messages
   await global.consumer.run({
     eachMessage: ({ topic, partition, message }) => {
-      var msg = {
+      let msg = {
         key: message.key ? message.key.toString() : "",
         value: message.value ? message.value.toString() : "",
         headers: message.headers ? message.headers : "",

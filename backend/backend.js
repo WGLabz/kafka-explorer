@@ -52,7 +52,7 @@ ipcMain.on("logGet", (event, arg) => {
 
 ipcMain.on("kafka", (event, arg) => {
   var command = arg.command;
-
+  var payload = arg.payload || '';
   switch (command) {
     case "init":
       kafkaInit()
@@ -74,7 +74,6 @@ ipcMain.on("kafka", (event, arg) => {
       break;
 
     case "message":
-      var payload = arg.payload;
       SendMessage(payload.topic, payload.key, payload.value, payload.partition)
         .then((res) => {
           if (res) {
@@ -89,9 +88,8 @@ ipcMain.on("kafka", (event, arg) => {
       break;
 
     case "createtopic":
-      var payload_ = arg.payload;
       kafka
-        .addTopic(payload_.name, payload_.type)
+        .addTopic(payload.name, payload.type)
         .then((res) => {
           if (res) sendUserMessage("INFO", "Topic added to the DB sucessfully");
           else sendUserMessage("WARN", "Topic already exists!");
@@ -99,11 +97,11 @@ ipcMain.on("kafka", (event, arg) => {
         .catch(() => {
           sendUserMessage("ERROR", "Error adding topic to the DB");
         });
-      if (payload_.createincluseter) {
+      if (payload.createincluseter) {
         createTopic(
-          payload_.topic,
-          payload_.partition || 1,
-          payload_.replicationfactor || 1
+          payload.topic,
+          payload.partition || 1,
+          payload.replicationfactor || 1
         )
           .then(() => {
             sendUserMessage("INFO", "Topic created in the cluster.");
@@ -178,19 +176,6 @@ ipcMain.on("kafka", (event, arg) => {
         });
       return;
     case "removetopicfromcluster":
-      // deleteTopicFromCluster(arg.topic)
-      //   .then(() => {
-      //     sendUserMessage(
-      //       "INFO",
-      //       "Topic removed from the cluster successfully."
-      //     );
-      //   })
-      //   .catch(() => {
-      //     sendUserMessage(
-      //       "ERROR",
-      //       "Failed to delete topic. Check if cluster allows it."
-      //     );
-      //   });
       sendUserMessage(
         "INFO",
         "Feature coming soon.. Topic will be removed from DB if exists!"
@@ -204,93 +189,97 @@ ipcMain.on("kafka", (event, arg) => {
 
 // Configuration Related.
 ipcMain.on("conf", async (event, arg) => {
-  var command = arg.command;
-  if (command === "GET") {
-    event.reply("confres", {
-      type: "GET",
-      server: await config.readConfig("KAFKA_BOOTSTRAP_SERVER"),
-      username: await config.readConfig("KAFKA_USERNAME"),
-      password: await config.readConfig("KAFKA_PASSWORD"),
-      consgrp: await config.readConfig("KAFKA_CONSUMER_GROUP"),
-    });
-  }
-  if (command === "SET") {
-    try {
-      await config.updateConfig("KAFKA_USERNAME", arg.username);
-      await config.updateConfig("KAFKA_PASSWORD", arg.password);
-      await config.updateConfig("KAFKA_BOOTSTRAP_SERVER", arg.server);
-      reconnectKafka();
-      sendUserMessage("INFO", `Server config updated sucessfully!`);
-    } catch (e) {
-      sendUserMessage("ERROR", `Server config update failed!`);
-    }
-  }
-  if (command === "STOP") {
-    ConsumerClose();
-    ProducerClose();
-    closeAdmin();
-  }
-  if (command === "SET_CONS_GRP") {
-    try {
-      await config.updateConfig("KAFKA_CONSUMER_GROUP", arg.val);
-      reconnectKafka();
-      sendUserMessage("INFO", `Default consumer group updated sucessfully!`);
-    } catch (e) {
-      sendUserMessage("ERROR", `Default consumer group update failed!`);
-    }
-  }
-
-  if (command === "START") {
-    kafkaInit()
-      .then(() => {
-        ConsumerInit();
-        ProducerInit();
-        initAdmin();
-      })
-      .catch((err) => {
-        log(err, "ERROR");
+  let command = arg.command;
+  switch (command) {
+    case "GET":
+      event.reply("confres", {
+        type: "GET",
+        server: await config.readConfig("KAFKA_BOOTSTRAP_SERVER"),
+        username: await config.readConfig("KAFKA_USERNAME"),
+        password: await config.readConfig("KAFKA_PASSWORD"),
+        consgrp: await config.readConfig("KAFKA_CONSUMER_GROUP"),
       });
-  }
-  if (command === "PURGE_DATABASE") {
-    if (arg.CONFIG) {
-      config
-        .removeAllConfig()
+      break;
+
+    case "SET":
+      try {
+        await config.updateConfig("KAFKA_USERNAME", arg.username);
+        await config.updateConfig("KAFKA_PASSWORD", arg.password);
+        await config.updateConfig("KAFKA_BOOTSTRAP_SERVER", arg.server);
+        reconnectKafka();
+        sendUserMessage("INFO", `Server config updated sucessfully!`);
+      } catch (e) {
+        sendUserMessage("ERROR", `Server config update failed!`);
+      }
+      break;
+
+    case "STOP":
+      ConsumerClose();
+      ProducerClose();
+      closeAdmin();
+      break;
+
+    case "SET_CONS_GRP":
+      try {
+        await config.updateConfig("KAFKA_CONSUMER_GROUP", arg.val);
+        reconnectKafka();
+        sendUserMessage("INFO", `Default consumer group updated sucessfully!`);
+      } catch (e) {
+        sendUserMessage("ERROR", `Default consumer group update failed!`);
+      }
+      break;
+    case "START":
+      kafkaInit()
         .then(() => {
-          sendUserMessage("INFO", `App config cleared!`);
+          ConsumerInit();
+          ProducerInit();
+          initAdmin();
         })
-        .catch(() => {
-          sendUserMessage("ERROR", `App config clear failed!`);
+        .catch((err) => {
+          log(err, "ERROR");
         });
-    }
-    if (arg.LOGS) {
-      logs
-        .removeAllLogs()
-        .then(() => {
-          sendUserMessage("INFO", `Logs purged successfully!`);
-        })
-        .catch(() => {
-          sendUserMessage("ERROR", `Failed to purge logs`);
-        });
-    }
-    if (arg.MESSAGES) {
-      kafka
-        .removeAllMessages()
-        .then(() => {
-          sendUserMessage("INFO", `Messages purged successfully!`);
-        })
-        .catch(() => {
-          sendUserMessage("ERROR", `Failed to purge messages`);
-        });
-    }
-    if (arg.TOPICS) {
-      kafka
-        .removeAllTopics()
-        .then(() => {
-          sendUserMessage("INFO", `Kafka topics purged successfully!`);
-        })
-        .catch(() => {
-          sendUserMessage("ERROR", `Failed to purge kafka topics.`);
-        });
-    }
+      break;
+    case "PURGE_DATABASE":
+      if (arg.CONFIG) {
+        config
+          .removeAllConfig()
+          .then(() => {
+            sendUserMessage("INFO", `App config cleared!`);
+          })
+          .catch(() => {
+            sendUserMessage("ERROR", `App config clear failed!`);
+          });
+      }
+      if (arg.LOGS) {
+        logs
+          .removeAllLogs()
+          .then(() => {
+            sendUserMessage("INFO", `Logs purged successfully!`);
+          })
+          .catch(() => {
+            sendUserMessage("ERROR", `Failed to purge logs`);
+          });
+      }
+      if (arg.MESSAGES) {
+        kafka
+          .removeAllMessages()
+          .then(() => {
+            sendUserMessage("INFO", `Messages purged successfully!`);
+          })
+          .catch(() => {
+            sendUserMessage("ERROR", `Failed to purge messages`);
+          });
+      }
+      if (arg.TOPICS) {
+        kafka
+          .removeAllTopics()
+          .then(() => {
+            sendUserMessage("INFO", `Kafka topics purged successfully!`);
+          })
+          .catch(() => {
+            sendUserMessage("ERROR", `Failed to purge kafka topics.`);
+          });
+      }
+      break;
   }
 });
