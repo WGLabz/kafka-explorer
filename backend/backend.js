@@ -281,5 +281,8 @@ ipcMain.on("conf", async (event, arg) => {
           });
       }
       break;
+    case "STATUS": // sets the flag that tell whether to try reconnecting or not.
+      await config.updateConfig("STATUS", arg.STATUS);
+      break;
   }
 });

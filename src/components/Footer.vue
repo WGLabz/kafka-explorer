@@ -56,9 +56,24 @@
             Purge
           </span>
         </a-tooltip>
+
+        <a-divider type="vertical" />
+        <a-tooltip title="Autoconnect">
+          <a-switch
+            defaultChecked
+            @change="changeConnectionRetry"
+            size="small"
+            color="red"
+          />
+        </a-tooltip>
       </v-col>
     </v-row>
-    <a-modal size="small" v-model="purgedbmodal" :footer="false" title="Purge database contents">
+    <a-modal
+      size="small"
+      v-model="purgedbmodal"
+      :footer="false"
+      title="Purge database contents"
+    >
       <d-b-purge></d-b-purge>
     </a-modal>
   </div>
@@ -93,6 +108,13 @@ export default {
   },
   methods: {
     moment,
+    changeConnectionRetry(state) {
+      console.log(state);
+      window.ipcRenderer.send("conf", {
+        command: "STATUS",
+        STATUS: state ? "CONNECT" : "STOP",
+      });
+    },
   },
 };
 </script>
